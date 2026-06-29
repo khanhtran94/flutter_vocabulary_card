@@ -1,3 +1,5 @@
+﻿part of vocabulary_app;
+
 class AppColors {
   static const background = Color(0xFFF8FAFC);
   static const surface = Colors.white;
@@ -13,4 +15,5 @@ class AppColors {
   static const textMuted = Color(0xFF94A3B8);
   static const border = Color(0xFFE2E8F0);
 }
+
 

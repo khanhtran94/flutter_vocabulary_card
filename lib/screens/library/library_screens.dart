@@ -1,4 +1,4 @@
-part of vocabulary_app;
+﻿part of vocabulary_app;
 
 class VocabularyLibraryScreen extends StatelessWidget {
   const VocabularyLibraryScreen({super.key});
@@ -7,27 +7,27 @@ class VocabularyLibraryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'B? th?',
+      title: 'Bộ thẻ',
       selectedIndex: 2,
       child: ListView(
         padding: EdgeInsets.all(scale.w(16)),
         children: [
-          _InputPanel(height: scale.h(52), hint: 'T�m t?, c?m t? ho?c b? th?'),
+          _InputPanel(height: scale.h(52), hint: 'Tìm từ, cụm từ hoặc bộ thẻ'),
           SizedBox(height: scale.h(16)),
           Row(
             children: [
-              Expanded(child: _FilterChip(text: 'T?t c?', selected: true)),
+              Expanded(child: _FilterChip(text: 'Tất cả', selected: true)),
               SizedBox(width: scale.w(8)),
-              Expanded(child: _FilterChip(text: '�ang h?c', selected: false)),
+              Expanded(child: _FilterChip(text: 'Đang học', selected: false)),
               SizedBox(width: scale.w(8)),
-              Expanded(child: _FilterChip(text: '�� nh?', selected: false)),
+              Expanded(child: _FilterChip(text: 'Đã nhớ', selected: false)),
             ],
           ),
           SizedBox(height: scale.h(16)),
           ...[
-            ('Everyday Vocabulary', '42 t?', 'C?p nh?t 2 gi? tru?c'),
-            ('Business English', '18 t?', '�ang h?c'),
-            ('Academic Terms', '76 t?', '�� ho�n th�nh 68%'),
+            ('Everyday Vocabulary', '42 từ', 'Cập nhật 2 giờ trước'),
+            ('Business English', '18 từ', 'Đang học'),
+            ('Academic Terms', '76 từ', 'Đã hoàn thành 68%'),
           ].map(
             (item) => Padding(
               padding: EdgeInsets.only(bottom: scale.h(12)),
@@ -47,7 +47,7 @@ class FlashcardDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'Chi ti?t th?',
+      title: 'Chi tiết thẻ',
       selectedIndex: 2,
       child: ListView(
         padding: EdgeInsets.all(scale.w(16)),
@@ -64,7 +64,7 @@ class FlashcardDetailScreen extends StatelessWidget {
               children: [
                 Text('abundant', style: TextStyle(fontSize: scale.sp(30), fontWeight: FontWeight.w700)),
                 SizedBox(height: scale.h(12)),
-                Text('phong ph�, d?i d�o', style: TextStyle(fontSize: scale.sp(20), color: AppColors.primaryDark)),
+                Text('phong phú, dồi dào', style: TextStyle(fontSize: scale.sp(20), color: AppColors.primaryDark)),
                 SizedBox(height: scale.h(16)),
                 Container(height: 1, color: AppColors.border),
                 SizedBox(height: scale.h(16)),
@@ -83,9 +83,9 @@ class FlashcardDetailScreen extends StatelessWidget {
           SizedBox(height: scale.h(16)),
           Row(
             children: [
-              Expanded(child: _PillButton(text: 'S?a', icon: Icons.edit_outlined, filled: false)),
+              Expanded(child: _PillButton(text: 'Sửa', icon: Icons.edit_outlined, filled: false)),
               SizedBox(width: scale.w(12)),
-              Expanded(child: _PillButton(text: '�n ngay', icon: Icons.play_arrow, filled: true)),
+              Expanded(child: _PillButton(text: 'Ôn ngay', icon: Icons.play_arrow, filled: true)),
             ],
           ),
         ],
@@ -93,3 +93,5 @@ class FlashcardDetailScreen extends StatelessWidget {
     );
   }
 }
+
+

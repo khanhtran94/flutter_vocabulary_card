@@ -1,4 +1,4 @@
-part of vocabulary_app;
+﻿part of vocabulary_app;
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -7,27 +7,27 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'Xin ch�o, Minh',
+      title: 'Xin chào, Minh',
       selectedIndex: 0,
       child: ListView(
         padding: EdgeInsets.fromLTRB(scale.w(16), scale.h(8), scale.w(16), scale.h(24)),
         children: [
           _HeroCard(
-            title: 'H�m nay b?n d� h?c 18 t?',
-            subtitle: 'C�n 6 t? n?a d? ho�n th�nh m?c ti�u 30 t?.',
+            title: 'Hôm nay bạn đã học 18 từ',
+            subtitle: 'Còn 6 từ nữa để hoàn thành mục tiêu 30 từ.',
             progress: 0.6,
-            buttonText: 'B?t d?u h?c',
+            buttonText: 'Bắt đầu học',
           ),
           SizedBox(height: scale.h(16)),
           Row(
             children: [
-              Expanded(child: _StatCard(label: '�� nh?', value: '142', icon: Icons.check_circle_outline, color: AppColors.secondary)),
+              Expanded(child: _StatCard(label: 'Đã nhớ', value: '142', icon: Icons.check_circle_outline, color: AppColors.secondary)),
               SizedBox(width: scale.w(12)),
-              Expanded(child: _StatCard(label: 'C?n �n', value: '28', icon: Icons.refresh_outlined, color: AppColors.danger)),
+              Expanded(child: _StatCard(label: 'Cần ôn', value: '28', icon: Icons.refresh_outlined, color: AppColors.danger)),
             ],
           ),
           SizedBox(height: scale.h(16)),
-          _SectionHeader(title: 'L?i t?t', action: 'Xem t?t c?'),
+          _SectionHeader(title: 'Lối tắt', action: 'Xem tất cả'),
           SizedBox(height: scale.h(12)),
           GridView.count(
             shrinkWrap: true,
@@ -37,14 +37,14 @@ class DashboardScreen extends StatelessWidget {
             mainAxisSpacing: scale.h(12),
             childAspectRatio: 1.55,
             children: const [
-              _ShortcutCard(title: 'D�n van b?n', icon: Icons.paste_outlined, color: AppColors.primary),
-              _ShortcutCard(title: 'B? th?', icon: Icons.collections_bookmark_outlined, color: AppColors.secondary),
-              _ShortcutCard(title: 'L?ch �n', icon: Icons.calendar_month_outlined, color: AppColors.tertiary),
-              _ShortcutCard(title: 'Th?ng k�', icon: Icons.bar_chart_outlined, color: AppColors.primaryDark),
+              _ShortcutCard(title: 'Dán văn bản', icon: Icons.paste_outlined, color: AppColors.primary),
+              _ShortcutCard(title: 'Bộ thẻ', icon: Icons.collections_bookmark_outlined, color: AppColors.secondary),
+              _ShortcutCard(title: 'Lịch ôn', icon: Icons.calendar_month_outlined, color: AppColors.tertiary),
+              _ShortcutCard(title: 'Thống kê', icon: Icons.bar_chart_outlined, color: AppColors.primaryDark),
             ],
           ),
           SizedBox(height: scale.h(16)),
-          _SectionHeader(title: 'S?p t?i', action: 'Chi ti?t'),
+          _SectionHeader(title: 'Sắp tới', action: 'Chi tiết'),
           SizedBox(height: scale.h(12)),
           const _UpcomingList(),
         ],
@@ -280,7 +280,7 @@ class _UpcomingList extends StatelessWidget {
                         children: [
                           Text(item.$1, style: TextStyle(fontSize: scale.sp(15), fontWeight: FontWeight.w600)),
                           SizedBox(height: scale.h(4)),
-                          Text('Ng�y h�m nay', style: TextStyle(fontSize: scale.sp(13), color: AppColors.textSoft)),
+                          Text('Ngày hôm nay', style: TextStyle(fontSize: scale.sp(13), color: AppColors.textSoft)),
                         ],
                       ),
                     ),
@@ -294,3 +294,5 @@ class _UpcomingList extends StatelessWidget {
     );
   }
 }
+
+

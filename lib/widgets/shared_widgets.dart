@@ -1,4 +1,4 @@
-part of vocabulary_app;
+Ôªøpart of vocabulary_app;
 
 class ScreenGalleryPage extends StatelessWidget {
   const ScreenGalleryPage({super.key});
@@ -82,7 +82,7 @@ class _GalleryHeader extends StatelessWidget {
           ),
           SizedBox(height: scale.h(8)),
           Text(
-            'Responsive layout with Android screen scaling based on a 390◊844 design frame.',
+            'Responsive layout with Android screen scaling based on a 390√ó844 design frame.',
             style: TextStyle(
               fontSize: scale.sp(15),
               height: 1.45,
@@ -206,10 +206,10 @@ class _BottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     const items = [
-      (Icons.home_outlined, 'Trang ch?'),
-      (Icons.school_outlined, 'H?c t?p'),
-      (Icons.collections_bookmark_outlined, 'B? th?'),
-      (Icons.person_outline, 'C· nh‚n'),
+      (Icons.home_outlined, 'Trang ch·ªß'),
+      (Icons.school_outlined, 'H·ªçc t·∫≠p'),
+      (Icons.collections_bookmark_outlined, 'B·ªô th·∫ª'),
+      (Icons.person_outline, 'C√° nh√¢n'),
     ];
     return Container(
       decoration: const BoxDecoration(
@@ -736,9 +736,9 @@ class _CalendarHeader extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Th·ng 6, 2026', style: TextStyle(fontSize: scale.sp(20), fontWeight: FontWeight.w700)),
+              Text('Th√°ng 6, 2026', style: TextStyle(fontSize: scale.sp(20), fontWeight: FontWeight.w700)),
               SizedBox(height: scale.h(4)),
-              Text('L?ch Ùn c· nh‚n hÛa', style: TextStyle(fontSize: scale.sp(13), color: AppColors.textSoft)),
+              Text('L·ªãch √¥n c√° nh√¢n h√≥a', style: TextStyle(fontSize: scale.sp(13), color: AppColors.textSoft)),
             ],
           ),
           const Icon(Icons.calendar_month, color: AppColors.primary),
@@ -838,3 +838,41 @@ class _CalendarGrid extends StatelessWidget {
 }
 
 class _Bar extends StatelessWidget {
+
+  const _Bar({required this.heightFactor, required this.label});
+
+  final double heightFactor;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final scale = context.scale;
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: scale.w(4)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              height: scale.h(140) * heightFactor,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(scale.r(14)),
+              ),
+            ),
+            SizedBox(height: scale.h(10)),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: scale.sp(12),
+                fontWeight: FontWeight.w600,
+                color: AppColors.textMuted,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

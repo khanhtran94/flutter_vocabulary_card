@@ -1,4 +1,4 @@
-part of vocabulary_app;
+﻿part of vocabulary_app;
 
 class PasteTextScreen extends StatelessWidget {
   const PasteTextScreen({super.key});
@@ -7,14 +7,14 @@ class PasteTextScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'D�n van b?n',
+      title: 'Dán văn bản',
       selectedIndex: 0,
       child: ListView(
         padding: EdgeInsets.all(scale.w(16)),
         children: [
           _ScreenTitle(
-            title: 'Nh?p n?i dung c?n tr�ch xu?t',
-            subtitle: 'D�n do?n van ti?ng Anh v�o d�y, h? th?ng s? t?o danh s�ch t? v?ng d? h?c.',
+            title: 'Nhập nội dung cần trích xuất',
+            subtitle: 'Dán đoạn văn tiếng Anh vào đây, hệ thống sẽ tạo danh sách từ vựng để học.',
           ),
           SizedBox(height: scale.h(16)),
           _InputPanel(
@@ -24,15 +24,15 @@ class PasteTextScreen extends StatelessWidget {
           SizedBox(height: scale.h(16)),
           Row(
             children: [
-              Expanded(child: _PillButton(text: 'T?i file', icon: Icons.upload_file_outlined, filled: false)),
+              Expanded(child: _PillButton(text: 'Tải file', icon: Icons.upload_file_outlined, filled: false)),
               SizedBox(width: scale.w(12)),
-              Expanded(child: _PillButton(text: 'T?o t? v?ng', icon: Icons.auto_fix_high_outlined, filled: true)),
+              Expanded(child: _PillButton(text: 'Tạo từ vựng', icon: Icons.auto_fix_high_outlined, filled: true)),
             ],
           ),
           SizedBox(height: scale.h(16)),
           const _InfoCard(
-            title: 'M?o',
-            body: 'Van b?n c�ng r� nghia th� danh s�ch t? v?ng sinh ra c�ng ch�nh x�c.',
+            title: 'Mẹo',
+            body: 'Văn bản càng rõ nghĩa thì danh sách từ vựng sinh ra càng chính xác.',
             icon: Icons.lightbulb_outline,
           ),
         ],
@@ -48,21 +48,21 @@ class ExtractedPreviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'Xem tru?c t? v?ng',
+      title: 'Xem trước từ vựng',
       selectedIndex: 2,
       child: ListView(
         padding: EdgeInsets.all(scale.w(16)),
         children: [
           _ScreenTitle(
-            title: '�� tr�ch xu?t 18 t?',
-            subtitle: 'Ki?m tra, ch?nh s?a ho?c b? b?t t? tru?c khi t?o b? th?.',
+            title: 'Đã trích xuất 18 từ',
+            subtitle: 'Kiểm tra, chỉnh sửa hoặc bỏ bớt từ trước khi tạo bộ thẻ.',
           ),
           SizedBox(height: scale.h(16)),
           ...[
-            ('abundant', 'd?i d�o, phong ph�', true),
-            ('resilient', 'b?n b?, ki�n cu?ng', true),
-            ('subtle', 'tinh t?, kh� nh?n th?y', false),
-            ('anticipate', 'd? do�n tru?c', true),
+            ('abundant', 'dồi dào, phong phú', true),
+            ('resilient', 'bền bỉ, kiên cường', true),
+            ('subtle', 'tinh tế, khó nhận thấy', false),
+            ('anticipate', 'dự đoán trước', true),
           ].map(
             (item) => Padding(
               padding: EdgeInsets.only(bottom: scale.h(12)),
@@ -74,7 +74,7 @@ class ExtractedPreviewScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: scale.h(8)),
-          _PillButton(text: 'T?o flashcards', icon: Icons.style_outlined, filled: true),
+          _PillButton(text: 'Tạo flashcards', icon: Icons.style_outlined, filled: true),
         ],
       ),
     );
@@ -88,7 +88,7 @@ class FlashcardCreatedSuccessScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'Th�nh c�ng',
+      title: 'Thành công',
       selectedIndex: 2,
       child: Center(
         child: Padding(
@@ -115,22 +115,22 @@ class FlashcardCreatedSuccessScreen extends StatelessWidget {
                 ),
                 SizedBox(height: scale.h(20)),
                 Text(
-                  'B? th? d� du?c t?o',
+                  'Bộ thẻ đã được tạo',
                   style: TextStyle(fontSize: scale.sp(26), fontWeight: FontWeight.w700, color: AppColors.text),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: scale.h(8)),
                 Text(
-                  'B?n c� th? b?t d?u h?c ngay ho?c xem l?i danh s�ch t?.',
+                  'Bạn có thể bắt đầu học ngay hoặc xem lại danh sách từ.',
                   style: TextStyle(fontSize: scale.sp(15), color: AppColors.textSoft, height: 1.45),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: scale.h(20)),
                 Row(
                   children: [
-                    Expanded(child: _PillButton(text: 'Xem b? th?', icon: Icons.collections_bookmark_outlined, filled: false)),
+                    Expanded(child: _PillButton(text: 'Xem bộ thẻ', icon: Icons.collections_bookmark_outlined, filled: false)),
                     SizedBox(width: scale.w(12)),
-                    Expanded(child: _PillButton(text: 'H?c ngay', icon: Icons.play_arrow, filled: true)),
+                    Expanded(child: _PillButton(text: 'Học ngay', icon: Icons.play_arrow, filled: true)),
                   ],
                 ),
               ],
@@ -141,4 +141,5 @@ class FlashcardCreatedSuccessScreen extends StatelessWidget {
     );
   }
 }
+
 

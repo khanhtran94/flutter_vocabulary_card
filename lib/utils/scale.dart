@@ -1,3 +1,5 @@
+﻿part of vocabulary_app;
+
 class Scale {
   Scale._(this.context)
       : width = MediaQuery.sizeOf(context).width,
@@ -23,4 +25,5 @@ class Scale {
 extension ScaleX on BuildContext {
   Scale get scale => Scale._(this);
 }
+
 

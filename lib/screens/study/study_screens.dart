@@ -1,4 +1,4 @@
-part of vocabulary_app;
+﻿part of vocabulary_app;
 
 class StudyTodayScreen extends StatelessWidget {
   const StudyTodayScreen({super.key});
@@ -7,20 +7,20 @@ class StudyTodayScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'H?c h�m nay',
+      title: 'Học hôm nay',
       selectedIndex: 1,
       child: ListView(
         padding: EdgeInsets.all(scale.w(16)),
         children: [
           _ScreenTitle(
-            title: '3 b�i c?n ho�n th�nh',
-            subtitle: 'Danh s�ch h?c t?p du?c s?p x?p theo m?c d? uu ti�n.',
+            title: '3 bài cần hoàn thành',
+            subtitle: 'Danh sách học tập được sắp xếp theo mức độ ưu tiên.',
           ),
           SizedBox(height: scale.h(16)),
           ...[
-            ('Flashcards �n t?p', '12 th?', 0.72, AppColors.primary),
-            ('Multiple choice', '8 c�u', 0.42, AppColors.secondary),
-            ('Typing quiz', '10 c�u', 0.18, AppColors.tertiary),
+            ('Flashcards ôn tập', '12 thẻ', 0.72, AppColors.primary),
+            ('Multiple choice', '8 câu', 0.42, AppColors.secondary),
+            ('Typing quiz', '10 câu', 0.18, AppColors.tertiary),
           ].map(
             (item) => Padding(
               padding: EdgeInsets.only(bottom: scale.h(12)),
@@ -45,7 +45,7 @@ class FlashcardStudyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'Flashcard h?c',
+      title: 'Flashcard học',
       selectedIndex: 1,
       child: Padding(
         padding: EdgeInsets.all(scale.w(16)),
@@ -53,7 +53,7 @@ class FlashcardStudyScreen extends StatelessWidget {
           children: [
             _ScreenTitle(
               title: '1 / 12',
-              subtitle: 'Ch?m d? l?t th?. K�o sang tr�i/ph?i d? chuy?n th?.',
+              subtitle: 'Chạm để lật thẻ. Kéo sang trái/phải để chuyển thẻ.',
             ),
             SizedBox(height: scale.h(16)),
             Expanded(
@@ -79,7 +79,7 @@ class FlashcardStudyScreen extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'phong ph�',
+                          'phong phú',
                           style: TextStyle(fontSize: scale.sp(28), fontWeight: FontWeight.w700, color: AppColors.text),
                           textAlign: TextAlign.center,
                         ),
@@ -95,9 +95,9 @@ class FlashcardStudyScreen extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Expanded(child: _ActionChip(text: 'C?n xem l?i', color: AppColors.danger, icon: Icons.close)),
+                        Expanded(child: _ActionChip(text: 'Cần xem lại', color: AppColors.danger, icon: Icons.close)),
                         SizedBox(width: scale.w(12)),
-                        Expanded(child: _ActionChip(text: 'T�i nh?', color: AppColors.secondary, icon: Icons.check)),
+                        Expanded(child: _ActionChip(text: 'Tôi nhớ', color: AppColors.secondary, icon: Icons.check)),
                       ],
                     )
                   ],
@@ -118,31 +118,31 @@ class MultipleChoiceQuizScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'Tr?c nghi?m',
+      title: 'Trắc nghiệm',
       selectedIndex: 1,
       child: ListView(
         padding: EdgeInsets.all(scale.w(16)),
         children: [
-          _QuizProgress(scale: scale, progress: 0.4, label: 'C�u 4 / 10'),
+          _QuizProgress(scale: scale, progress: 0.4, label: 'Câu 4 / 10'),
           SizedBox(height: scale.h(20)),
           Text(
-            '�subtle� nghia l� g�?',
+            '“subtle” nghĩa là gì?',
             style: TextStyle(fontSize: scale.sp(26), fontWeight: FontWeight.w700, color: AppColors.text, height: 1.25),
           ),
           SizedBox(height: scale.h(16)),
           ...[
-            'R� r�ng, d? nh?n th?y',
-            'Tinh t?, kh� nh?n ra',
-            '��ng d�c, h?n lo?n',
-            'R?ng l?n, bao la',
+            'Rõ ràng, dễ nhận thấy',
+            'Tinh tế, khó nhận ra',
+            'Đông đúc, hỗn loạn',
+            'Rộng lớn, bao la',
           ].map(
             (answer) => Padding(
               padding: EdgeInsets.only(bottom: scale.h(12)),
-              child: _AnswerOption(text: answer, selected: answer == 'Tinh t?, kh� nh?n ra'),
+              child: _AnswerOption(text: answer, selected: answer == 'Tinh tế, khó nhận ra'),
             ),
           ),
           SizedBox(height: scale.h(8)),
-          _PillButton(text: 'Ti?p t?c', icon: Icons.arrow_forward, filled: true),
+          _PillButton(text: 'Tiếp tục', icon: Icons.arrow_forward, filled: true),
         ],
       ),
     );
@@ -156,15 +156,15 @@ class TypingQuizScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: '�i?n t?',
+      title: 'Điền từ',
       selectedIndex: 1,
       child: ListView(
         padding: EdgeInsets.all(scale.w(16)),
         children: [
-          _QuizProgress(scale: scale, progress: 0.8, label: 'C�u 8 / 10'),
+          _QuizProgress(scale: scale, progress: 0.8, label: 'Câu 8 / 10'),
           SizedBox(height: scale.h(20)),
           Text(
-            'Nh?p t? ti?ng Anh cho nghia: �ki�n cu?ng, b?n b?�',
+            'Nhập từ tiếng Anh cho nghĩa: “kiên cường, bền bỉ”',
             style: TextStyle(fontSize: scale.sp(22), fontWeight: FontWeight.w700, color: AppColors.text, height: 1.3),
           ),
           SizedBox(height: scale.h(16)),
@@ -172,9 +172,9 @@ class TypingQuizScreen extends StatelessWidget {
           SizedBox(height: scale.h(16)),
           Row(
             children: [
-              Expanded(child: _PillButton(text: 'G?i �', icon: Icons.tips_and_updates_outlined, filled: false)),
+              Expanded(child: _PillButton(text: 'Gợi ý', icon: Icons.tips_and_updates_outlined, filled: false)),
               SizedBox(width: scale.w(12)),
-              Expanded(child: _PillButton(text: 'N?p', icon: Icons.send_outlined, filled: true)),
+              Expanded(child: _PillButton(text: 'Nộp', icon: Icons.send_outlined, filled: true)),
             ],
           ),
         ],
@@ -190,7 +190,7 @@ class StudyResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'K?t qu?',
+      title: 'Kết quả',
       selectedIndex: 1,
       child: ListView(
         padding: EdgeInsets.all(scale.w(16)),
@@ -206,16 +206,16 @@ class StudyResultScreen extends StatelessWidget {
               children: [
                 Text('92%', style: TextStyle(fontSize: scale.sp(48), fontWeight: FontWeight.w800, color: AppColors.primary)),
                 SizedBox(height: scale.h(8)),
-                Text('Ho�n th�nh xu?t s?c', style: TextStyle(fontSize: scale.sp(22), fontWeight: FontWeight.w700)),
+                Text('Hoàn thành xuất sắc', style: TextStyle(fontSize: scale.sp(22), fontWeight: FontWeight.w700)),
                 SizedBox(height: scale.h(12)),
                 Text(
-                  'B?n d� tr? l?i d�ng 23/25 c�u h?i.',
+                  'Bạn đã trả lời đúng 23/25 câu hỏi.',
                   style: TextStyle(fontSize: scale.sp(15), color: AppColors.textSoft),
                 ),
                 SizedBox(height: scale.h(20)),
                 Row(
                   children: const [
-                    Expanded(child: _ResultMetric(label: '��ng', value: '23', color: AppColors.secondary)),
+                    Expanded(child: _ResultMetric(label: 'Đúng', value: '23', color: AppColors.secondary)),
                     SizedBox(width: 12),
                     Expanded(child: _ResultMetric(label: 'Sai', value: '2', color: AppColors.danger)),
                   ],
@@ -224,11 +224,13 @@ class StudyResultScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: scale.h(16)),
-          _PillButton(text: '�n l?i l?i sai', icon: Icons.refresh_outlined, filled: false),
+          _PillButton(text: 'Ôn lại lỗi sai', icon: Icons.refresh_outlined, filled: false),
           SizedBox(height: scale.h(12)),
-          _PillButton(text: 'Ti?p t?c h?c', icon: Icons.arrow_forward, filled: true),
+          _PillButton(text: 'Tiếp tục học', icon: Icons.arrow_forward, filled: true),
         ],
       ),
     );
   }
 }
+
+

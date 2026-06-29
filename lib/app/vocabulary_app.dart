@@ -1,5 +1,6 @@
-library vocabulary_app;
+﻿library vocabulary_app;
 
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 part '../core/app_colors.dart';
@@ -67,4 +68,5 @@ class VocabularyApp extends StatelessWidget {
     );
   }
 }
+
 

@@ -1,4 +1,4 @@
-part of vocabulary_app;
+﻿part of vocabulary_app;
 
 class ReviewCalendarScreen extends StatelessWidget {
   const ReviewCalendarScreen({super.key});
@@ -7,7 +7,7 @@ class ReviewCalendarScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'L?ch �n',
+      title: 'Lịch ôn',
       selectedIndex: 2,
       child: ListView(
         padding: EdgeInsets.all(scale.w(16)),
@@ -17,8 +17,8 @@ class ReviewCalendarScreen extends StatelessWidget {
           _CalendarGrid(scale: scale),
           SizedBox(height: scale.h(16)),
           const _InfoCard(
-            title: 'G?i �',
-            body: 'C�c � m�u d?m l� ng�y b?n d� h?c nhi?u t? hon m?c trung b�nh.',
+            title: 'Gợi ý',
+            body: 'Các ô màu đậm là ngày bạn đã học nhiều từ hơn mức trung bình.',
             icon: Icons.info_outline,
           ),
         ],
@@ -34,16 +34,16 @@ class StatisticsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'Th?ng k�',
+      title: 'Thống kê',
       selectedIndex: 2,
       child: ListView(
         padding: EdgeInsets.all(scale.w(16)),
         children: [
           Row(
             children: [
-              Expanded(child: _StatCard(label: 'T? d� h?c', value: '312', icon: Icons.menu_book_outlined, color: AppColors.primary)),
+              Expanded(child: _StatCard(label: 'Từ đã học', value: '312', icon: Icons.menu_book_outlined, color: AppColors.primary)),
               SizedBox(width: scale.w(12)),
-              Expanded(child: _StatCard(label: 'Chu?i ng�y', value: '18', icon: Icons.local_fire_department_outlined, color: AppColors.secondary)),
+              Expanded(child: _StatCard(label: 'Chuỗi ngày', value: '18', icon: Icons.local_fire_department_outlined, color: AppColors.secondary)),
             ],
           ),
           SizedBox(height: scale.h(16)),
@@ -57,7 +57,7 @@ class StatisticsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Ti?n d? 7 ng�y', style: TextStyle(fontSize: scale.sp(18), fontWeight: FontWeight.w700)),
+                Text('Tiến độ 7 ngày', style: TextStyle(fontSize: scale.sp(18), fontWeight: FontWeight.w700)),
                 SizedBox(height: scale.h(16)),
                 SizedBox(
                   height: scale.h(180),
@@ -90,7 +90,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return AppShell(
-      title: 'C�i d?t',
+      title: 'Cài đặt',
       selectedIndex: 3,
       child: ListView(
         padding: EdgeInsets.all(scale.w(16)),
@@ -113,7 +113,7 @@ class SettingsScreen extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Minh Tr?n', style: TextStyle(fontSize: scale.sp(18), fontWeight: FontWeight.w700)),
+                    Text('Minh Trần', style: TextStyle(fontSize: scale.sp(18), fontWeight: FontWeight.w700)),
                     SizedBox(height: scale.h(4)),
                     Text('Premium learner', style: TextStyle(fontSize: scale.sp(13), color: AppColors.textSoft)),
                   ],
@@ -123,10 +123,10 @@ class SettingsScreen extends StatelessWidget {
           ),
           SizedBox(height: scale.h(16)),
           ...[
-            ('Th�ng b�o', Icons.notifications_none_outlined),
-            ('Ng�n ng?', Icons.language_outlined),
-            ('�?ng b?', Icons.sync_outlined),
-            ('Tr? gi�p', Icons.help_outline),
+            ('Thông báo', Icons.notifications_none_outlined),
+            ('Ngôn ngữ', Icons.language_outlined),
+            ('Đồng bộ', Icons.sync_outlined),
+            ('Trợ giúp', Icons.help_outline),
           ].map(
             (item) => Padding(
               padding: EdgeInsets.only(bottom: scale.h(12)),
@@ -138,3 +138,5 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
+
+
