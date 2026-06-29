@@ -1,4 +1,4 @@
-﻿part of vocabulary_app;
+﻿part of '../../app/vocabulary_app.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -86,7 +86,7 @@ class _HeroCard extends StatelessWidget {
             width: scale.w(54),
             height: scale.w(54),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.16),
+              color: Colors.white.withValues(alpha: 0.16),
               borderRadius: BorderRadius.circular(scale.r(18)),
             ),
             child: Icon(Icons.auto_stories_outlined, color: Colors.white, size: scale.w(28)),
@@ -106,7 +106,7 @@ class _HeroCard extends StatelessWidget {
             subtitle,
             style: TextStyle(
               fontSize: scale.sp(15),
-              color: Colors.white.withOpacity(0.88),
+              color: Colors.white.withValues(alpha: 0.88),
               height: 1.45,
             ),
           ),
@@ -116,7 +116,7 @@ class _HeroCard extends StatelessWidget {
             child: LinearProgressIndicator(
               minHeight: scale.h(8),
               value: progress,
-              backgroundColor: Colors.white.withOpacity(0.18),
+              backgroundColor: Colors.white.withValues(alpha: 0.18),
               valueColor: const AlwaysStoppedAnimation<Color>(AppColors.secondary),
             ),
           ),
@@ -209,7 +209,7 @@ class _ShortcutCard extends StatelessWidget {
             width: scale.w(40),
             height: scale.w(40),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
+              color: color.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(scale.r(12)),
             ),
             child: Icon(icon, color: color, size: scale.w(22)),
@@ -294,5 +294,6 @@ class _UpcomingList extends StatelessWidget {
     );
   }
 }
+
 
 

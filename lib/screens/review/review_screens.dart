@@ -1,4 +1,4 @@
-﻿part of vocabulary_app;
+﻿part of '../../app/vocabulary_app.dart';
 
 class ReviewCalendarScreen extends StatelessWidget {
   const ReviewCalendarScreen({super.key});
@@ -106,7 +106,7 @@ class SettingsScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: scale.w(28),
-                  backgroundColor: AppColors.primary.withOpacity(0.12),
+                  backgroundColor: AppColors.primary.withValues(alpha: 0.12),
                   child: Icon(Icons.person, color: AppColors.primary, size: scale.w(28)),
                 ),
                 SizedBox(width: scale.w(16)),
@@ -138,5 +138,6 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
+
 
 

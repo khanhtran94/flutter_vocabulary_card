@@ -1,4 +1,4 @@
-﻿part of vocabulary_app;
+﻿part of '../../app/vocabulary_app.dart';
 
 class VocabularyLibraryScreen extends StatelessWidget {
   const VocabularyLibraryScreen({super.key});

@@ -1,4 +1,4 @@
-﻿part of vocabulary_app;
+﻿part of '../app/vocabulary_app.dart';
 
 class AppColors {
   static const background = Color(0xFFF8FAFC);

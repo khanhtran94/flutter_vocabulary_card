@@ -1,4 +1,4 @@
-﻿part of vocabulary_app;
+﻿part of '../../app/vocabulary_app.dart';
 
 class StudyTodayScreen extends StatelessWidget {
   const StudyTodayScreen({super.key});

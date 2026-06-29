@@ -1,4 +1,4 @@
-﻿part of vocabulary_app;
+﻿part of '../../app/vocabulary_app.dart';
 
 class PasteTextScreen extends StatelessWidget {
   const PasteTextScreen({super.key});
@@ -108,7 +108,7 @@ class FlashcardCreatedSuccessScreen extends StatelessWidget {
                   width: scale.w(92),
                   height: scale.w(92),
                   decoration: BoxDecoration(
-                    color: AppColors.secondary.withOpacity(0.12),
+                    color: AppColors.secondary.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(Icons.check_circle, color: AppColors.secondary, size: scale.w(54)),
@@ -141,5 +141,6 @@ class FlashcardCreatedSuccessScreen extends StatelessWidget {
     );
   }
 }
+
 
 

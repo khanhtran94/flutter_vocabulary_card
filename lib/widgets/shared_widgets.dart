@@ -1,4 +1,4 @@
-﻿part of vocabulary_app;
+﻿part of '../app/vocabulary_app.dart';
 
 class ScreenGalleryPage extends StatelessWidget {
   const ScreenGalleryPage({super.key});
@@ -122,7 +122,7 @@ class _GalleryTile extends StatelessWidget {
                 width: scale.w(48),
                 height: scale.w(48),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.12),
+                  color: AppColors.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(scale.r(14)),
                 ),
                 child: Icon(screen.icon, color: AppColors.primary, size: scale.w(24)),
@@ -228,7 +228,7 @@ class _BottomNav extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: scale.h(10)),
                   decoration: BoxDecoration(
-                    color: active ? AppColors.primary.withOpacity(0.10) : Colors.transparent,
+                    color: active ? AppColors.primary.withValues(alpha: 0.10) : Colors.transparent,
                     borderRadius: BorderRadius.circular(scale.r(14)),
                   ),
                   child: Column(
@@ -401,9 +401,9 @@ class _VocabularyPreviewTile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(scale.w(16)),
       decoration: BoxDecoration(
-        color: selected ? AppColors.primary.withOpacity(0.08) : AppColors.surface,
+        color: selected ? AppColors.primary.withValues(alpha: 0.08) : AppColors.surface,
         borderRadius: BorderRadius.circular(scale.r(18)),
-        border: Border.all(color: selected ? AppColors.primary.withOpacity(0.25) : AppColors.border),
+        border: Border.all(color: selected ? AppColors.primary.withValues(alpha: 0.25) : AppColors.border),
       ),
       child: Row(
         children: [
@@ -461,7 +461,7 @@ class _StudyPlanCard extends StatelessWidget {
                 width: scale.w(40),
                 height: scale.w(40),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(scale.r(12)),
                 ),
                 child: Icon(Icons.task_alt_outlined, color: color, size: scale.w(22)),
@@ -541,7 +541,7 @@ class _AnswerOption extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(scale.w(16)),
       decoration: BoxDecoration(
-        color: selected ? AppColors.primary.withOpacity(0.10) : AppColors.surface,
+        color: selected ? AppColors.primary.withValues(alpha: 0.10) : AppColors.surface,
         borderRadius: BorderRadius.circular(scale.r(18)),
         border: Border.all(color: selected ? AppColors.primary : AppColors.border),
       ),
@@ -597,7 +597,7 @@ class _ResultMetric extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(scale.w(16)),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
+        color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(scale.r(18)),
       ),
       child: Column(
@@ -663,7 +663,7 @@ class _LibraryCard extends StatelessWidget {
             width: scale.w(52),
             height: scale.w(52),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.10),
+              color: AppColors.primary.withValues(alpha: 0.10),
               borderRadius: BorderRadius.circular(scale.r(16)),
             ),
             child: Icon(Icons.collections_bookmark_outlined, color: AppColors.primary, size: scale.w(26)),
@@ -875,4 +875,5 @@ class _Bar extends StatelessWidget {
     );
   }
 }
+
 
