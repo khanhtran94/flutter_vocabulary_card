@@ -139,5 +139,55 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
+class _StatCard extends StatelessWidget {
+  const _StatCard({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final scale = context.scale;
+    return Container(
+      padding: EdgeInsets.all(scale.w(16)),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(scale.r(18)),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: color, size: scale.w(24)),
+          SizedBox(height: scale.h(18)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: scale.sp(26),
+              fontWeight: FontWeight.w700,
+              color: AppColors.text,
+            ),
+          ),
+          SizedBox(height: scale.h(4)),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: scale.sp(13),
+              color: AppColors.textSoft,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 
 
