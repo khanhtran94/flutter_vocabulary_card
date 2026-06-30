@@ -36,7 +36,7 @@ class ReviewCalendarScreen extends StatelessWidget {
                   SizedBox(width: scale.w(12)),
                   Expanded(
                     child: Text(
-                      'L?ch ôn t?p',
+                      'Lich on tap',
                       style: TextStyle(
                         fontSize: scale.sp(24),
                         fontWeight: FontWeight.w700,
@@ -76,7 +76,7 @@ class ReviewCalendarScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Tháng 6, 2026',
+                              'Thang 6, 2026',
                               style: TextStyle(
                                 fontSize: scale.sp(20),
                                 fontWeight: FontWeight.w600,
@@ -106,7 +106,7 @@ class ReviewCalendarScreen extends StatelessWidget {
                   ),
                   SizedBox(height: scale.h(24)),
                   Text(
-                    'DANH SÁCH ÔN T?P',
+                    'DANH SACH ON TAP',
                     style: TextStyle(
                       fontSize: scale.sp(12),
                       fontWeight: FontWeight.w600,
@@ -117,26 +117,26 @@ class ReviewCalendarScreen extends StatelessWidget {
                   SizedBox(height: scale.h(8)),
                   const _ReviewTaskCard(
                     icon: Icons.today,
-                    title: 'Hôm nay',
-                    subtitle: 'L?ch trình d? xu?t',
-                    countLabel: '12 t?',
+                    title: 'Hom nay',
+                    subtitle: 'Lich trinh de xuat',
+                    countLabel: '12 tu',
                     countColor: AppColors.primary,
                     selected: true,
-                    badgeLabel: 'Ðang ch?',
+                    badgeLabel: 'Dang cho',
                   ),
                   SizedBox(height: 12),
                   const _ReviewTaskCard(
                     icon: Icons.event,
-                    title: 'Ngày mai',
-                    subtitle: 'D? ki?n ôn t?p',
-                    countLabel: '5 t?',
+                    title: 'Ngay mai',
+                    subtitle: 'Du kien on tap',
+                    countLabel: '5 tu',
                   ),
                   SizedBox(height: 12),
                   const _ReviewTaskCard(
                     icon: Icons.calendar_month,
                     title: '27/06',
-                    subtitle: 'Cu?i tu?n',
-                    countLabel: '8 t?',
+                    subtitle: 'Cuoi tuan',
+                    countLabel: '8 tu',
                   ),
                   SizedBox(height: scale.h(24)),
                   Container(
@@ -151,7 +151,7 @@ class ReviewCalendarScreen extends StatelessWidget {
                         Icon(Icons.lightbulb, color: Colors.white, size: scale.w(40)),
                         SizedBox(height: scale.h(24)),
                         Text(
-                          'M?o h?c t?p',
+                          'Meo hoc tap',
                           style: TextStyle(
                             fontSize: scale.sp(20),
                             fontWeight: FontWeight.w600,
@@ -160,7 +160,7 @@ class ReviewCalendarScreen extends StatelessWidget {
                         ),
                         SizedBox(height: scale.h(8)),
                         Text(
-                          '"S? d?ng Spaced Repetition (L?p l?i ng?t quãng) d? t?i uu hóa kh? nang ghi nh? dài h?n."',
+                          '"Su dung Spaced Repetition de toi uu hoa kha nang ghi nho dai han."',
                           style: TextStyle(
                             fontSize: scale.sp(14),
                             fontStyle: FontStyle.italic,
@@ -190,7 +190,7 @@ class ReviewCalendarScreen extends StatelessWidget {
                                   Icon(Icons.trending_up, color: const Color(0xFF005236), size: scale.w(18)),
                                   SizedBox(width: scale.w(4)),
                                   Text(
-                                    'TI?N Ð? TU?N',
+                                    'TIEN DO TUAN',
                                     style: TextStyle(
                                       fontSize: scale.sp(12),
                                       fontWeight: FontWeight.w700,
@@ -211,7 +211,7 @@ class ReviewCalendarScreen extends StatelessWidget {
                               ),
                               SizedBox(height: scale.h(4)),
                               Text(
-                                'Ðã hoàn thành',
+                                'Da hoan thanh',
                                 style: TextStyle(
                                   fontSize: scale.sp(14),
                                   color: const Color(0xFF005236),
@@ -229,11 +229,11 @@ class ReviewCalendarScreen extends StatelessWidget {
                               SizedBox(
                                 width: scale.w(64),
                                 height: scale.w(64),
-                                child: CircularProgressIndicator(
+                                child: const CircularProgressIndicator(
                                   value: 0.85,
                                   strokeWidth: 4,
-                                  backgroundColor: const Color(0x33005236),
-                                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF005236)),
+                                  backgroundColor: Color(0x33005236),
+                                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF005236)),
                                 ),
                               ),
                               Text(
@@ -343,15 +343,14 @@ class _ReviewCalendarGrid extends StatelessWidget {
           ),
           itemBuilder: (context, index) {
             final day = days[index];
-            final isCurrentMonth = day.$1 <= 28 || index >= 7;
+            final isCurrentMonth = index >= 7;
             final hasDot = day.$2;
             final isToday = day.$3;
             final invertDot = day.$4;
             final textColor = isCurrentMonth ? AppColors.text : AppColors.textMuted.withValues(alpha: 0.5);
-            final background = isToday ? AppColors.primary : Colors.transparent;
             return Container(
               decoration: BoxDecoration(
-                color: background,
+                color: isToday ? AppColors.primary : Colors.transparent,
                 borderRadius: BorderRadius.circular(scale.r(12)),
                 boxShadow: isToday
                     ? const [
@@ -422,9 +421,7 @@ class _ReviewTaskCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(scale.r(16)),
-        border: Border.all(
-          color: selected ? AppColors.primary : const Color(0xFFC2C6D6),
-        ),
+        border: Border.all(color: selected ? AppColors.primary : const Color(0xFFC2C6D6)),
         boxShadow: selected
             ? const [
                 BoxShadow(
@@ -444,11 +441,7 @@ class _ReviewTaskCard extends StatelessWidget {
               color: selected ? const Color(0xFFD8E2FF) : const Color(0xFFECEEF0),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              color: selected ? AppColors.primary : AppColors.textSoft,
-              size: scale.w(24),
-            ),
+            child: Icon(icon, color: selected ? AppColors.primary : AppColors.textSoft, size: scale.w(24)),
           ),
           SizedBox(width: scale.w(16)),
           Expanded(
@@ -547,7 +540,7 @@ class StatisticsScreen extends StatelessWidget {
                   SizedBox(width: scale.w(12)),
                   Expanded(
                     child: Text(
-                      'Th?ng kê',
+                      'Thong ke',
                       style: TextStyle(
                         fontSize: scale.sp(24),
                         fontWeight: FontWeight.w700,
@@ -571,9 +564,9 @@ class StatisticsScreen extends StatelessWidget {
                     children: const [
                       Expanded(
                         child: _StatisticsSummaryCard(
-                          label: 'T?NG',
+                          label: 'TONG',
                           value: '120',
-                          unit: 't?',
+                          unit: 'tu',
                           valueColor: AppColors.primary,
                         ),
                       ),
@@ -582,10 +575,10 @@ class StatisticsScreen extends StatelessWidget {
                         child: _StatisticsSummaryCard(
                           label: 'STREAK',
                           value: '5',
-                          unit: 'ngày',
+                          unit: 'ngay',
                           valueColor: AppColors.tertiary,
                           footerIcon: Icons.local_fire_department,
-                          footerText: 'Ðang duy trì',
+                          footerText: 'Dang duy tri',
                           footerColor: AppColors.secondary,
                         ),
                       ),
@@ -596,7 +589,7 @@ class StatisticsScreen extends StatelessWidget {
                     children: const [
                       Expanded(
                         child: _StatisticsProgressCard(
-                          label: 'ÐANG H?C',
+                          label: 'DANG HOC',
                           value: '35',
                           progress: 0.29,
                           progressColor: AppColors.primary,
@@ -605,7 +598,7 @@ class StatisticsScreen extends StatelessWidget {
                       SizedBox(width: 12),
                       Expanded(
                         child: _StatisticsProgressCard(
-                          label: 'ÐÃ NH?',
+                          label: 'DA NHO',
                           value: '60',
                           progress: 0.50,
                           progressColor: AppColors.secondary,
@@ -632,7 +625,7 @@ class StatisticsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Ho?t d?ng 7 ngày qua',
+                          'Hoat dong 7 ngay qua',
                           style: TextStyle(
                             fontSize: scale.sp(20),
                             fontWeight: FontWeight.w600,
@@ -660,7 +653,7 @@ class StatisticsScreen extends StatelessWidget {
                   ),
                   SizedBox(height: scale.h(24)),
                   Text(
-                    'Thành t?u',
+                    'Thanh tuu',
                     style: TextStyle(
                       fontSize: scale.sp(20),
                       fontWeight: FontWeight.w600,
@@ -701,7 +694,7 @@ class StatisticsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'T? y?u',
+                        'Tu yeu',
                         style: TextStyle(
                           fontSize: scale.sp(20),
                           fontWeight: FontWeight.w600,
@@ -709,7 +702,7 @@ class StatisticsScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'C?n chú ý',
+                        'Can chu y',
                         style: TextStyle(
                           fontSize: scale.sp(14),
                           color: AppColors.textSoft,
@@ -728,20 +721,20 @@ class StatisticsScreen extends StatelessWidget {
                       children: [
                         _WeakWordRow(
                           word: 'Meticulous',
-                          phonetic: '/m?'t?k.j?.l?s/',
-                          errorCount: 'Sai 4 l?n',
+                          phonetic: '/mÉ™ËˆtÉªk.jÉ™.lÉ™s/',
+                          errorCount: 'Sai 4 lan',
                         ),
                         Divider(height: 1, color: Color(0xFFC2C6D6)),
                         _WeakWordRow(
                           word: 'Pragmatic',
-                          phonetic: '/præg'mæt.?k/',
-                          errorCount: 'Sai 3 l?n',
+                          phonetic: '/prÃ¦É¡ËˆmÃ¦t.Éªk/',
+                          errorCount: 'Sai 3 lan',
                         ),
                         Divider(height: 1, color: Color(0xFFC2C6D6)),
                         _WeakWordRow(
                           word: 'Eloquent',
-                          phonetic: '/'el.?.kw?nt/',
-                          errorCount: 'Sai 3 l?n',
+                          phonetic: '/Ëˆel.É™.kwÉ™nt/',
+                          errorCount: 'Sai 3 lan',
                         ),
                       ],
                     ),
@@ -761,7 +754,7 @@ class StatisticsScreen extends StatelessWidget {
                       onPressed: () {},
                       icon: Icon(Icons.refresh, size: scale.w(20)),
                       label: Text(
-                        'Ôn l?i t? y?u',
+                        'On lai tu yeu',
                         style: TextStyle(
                           fontSize: scale.sp(16),
                           fontWeight: FontWeight.w700,
@@ -1020,10 +1013,7 @@ class _AchievementBadge extends StatelessWidget {
         decoration: BoxDecoration(
           color: locked ? const Color(0xFFECEEF0) : Colors.white,
           borderRadius: BorderRadius.circular(scale.r(16)),
-          border: Border.all(
-            color: const Color(0xFFC2C6D6),
-            style: locked ? BorderStyle.solid : BorderStyle.solid,
-          ),
+          border: Border.all(color: const Color(0xFFC2C6D6)),
         ),
         child: Column(
           children: [
@@ -1140,7 +1130,7 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      'Cài d?t',
+                      'Cai dat',
                       style: TextStyle(
                         fontSize: scale.sp(24),
                         fontWeight: FontWeight.w700,
@@ -1184,8 +1174,8 @@ class SettingsScreen extends StatelessWidget {
                         Container(
                           width: scale.w(64),
                           height: scale.w(64),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFD8E2FF),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFD8E2FF),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(Icons.person, color: AppColors.primary, size: scale.w(32)),
@@ -1196,7 +1186,7 @@ class SettingsScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Tên ngu?i dùng',
+                                'Ten nguoi dung',
                                 style: TextStyle(
                                   fontSize: scale.sp(20),
                                   fontWeight: FontWeight.w600,
@@ -1223,14 +1213,14 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: scale.h(24)),
-                  _SettingsSectionHeader(icon: Icons.school, title: 'H?c t?p'),
+                  _SettingsSectionHeader(icon: Icons.school, title: 'Hoc tap'),
                   SizedBox(height: scale.h(12)),
                   Container(
                     decoration: _settingsGroupDecoration(scale),
                     child: Column(
                       children: [
                         _SettingsValueRow(
-                          title: 'S? t? m?i m?i ngày',
+                          title: 'So tu moi moi ngay',
                           trailing: Container(
                             padding: EdgeInsets.symmetric(horizontal: scale.w(16), vertical: scale.h(8)),
                             decoration: BoxDecoration(
@@ -1255,24 +1245,24 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         const Divider(height: 1, color: Color(0xFFC2C6D6)),
                         const _SettingsSimpleRow(
-                          title: 'Ch? d? m?c d?nh',
+                          title: 'Che do mac dinh',
                           value: 'Flashcard',
                           valueColor: AppColors.primary,
                         ),
                         const Divider(height: 1, color: Color(0xFFC2C6D6)),
                         const _SettingsToggleRow(
-                          title: 'T? d?ng phát audio',
+                          title: 'Tu dong phat audio',
                           enabled: true,
                         ),
                         const Divider(height: 1, color: Color(0xFFC2C6D6)),
                         const _SettingsSimpleRow(
-                          title: 'Gi?ng d?c',
+                          title: 'Giong doc',
                           value: 'US English',
                           trailingChevron: true,
                         ),
                         const Divider(height: 1, color: Color(0xFFC2C6D6)),
                         const _SettingsSimpleRow(
-                          title: 'M?c d?',
+                          title: 'Muc do',
                           value: 'Intermediate',
                           trailingChevron: true,
                         ),
@@ -1280,7 +1270,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: scale.h(24)),
-                  _SettingsSectionHeader(icon: Icons.history, title: 'Ôn t?p'),
+                  _SettingsSectionHeader(icon: Icons.history, title: 'On tap'),
                   SizedBox(height: scale.h(12)),
                   Container(
                     decoration: _settingsGroupDecoration(scale),
@@ -1296,7 +1286,7 @@ class SettingsScreen extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      'Chu k? ôn t?p (ngày)',
+                                      'Chu ky on tap (ngay)',
                                       style: TextStyle(
                                         fontSize: scale.sp(16),
                                         color: AppColors.text,
@@ -1304,7 +1294,7 @@ class SettingsScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'Tùy ch?nh',
+                                    'Tuy chinh',
                                     style: TextStyle(
                                       fontSize: scale.sp(12),
                                       fontWeight: FontWeight.w600,
@@ -1332,14 +1322,14 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         const Divider(height: 1, color: Color(0xFFC2C6D6)),
                         const _SettingsToggleRow(
-                          title: 'Nh?c h?c m?i ngày',
+                          title: 'Nhac hoc moi ngay',
                           enabled: true,
                         ),
                       ],
                     ),
                   ),
                   SizedBox(height: scale.h(24)),
-                  _SettingsSectionHeader(icon: Icons.storage, title: 'D? li?u'),
+                  _SettingsSectionHeader(icon: Icons.storage, title: 'Du lieu'),
                   SizedBox(height: scale.h(12)),
                   Container(
                     decoration: _settingsGroupDecoration(scale),
@@ -1357,7 +1347,7 @@ class SettingsScreen extends StatelessWidget {
                         Divider(height: 1, color: Color(0xFFC2C6D6)),
                         _SettingsActionRow(
                           icon: Icons.delete_forever,
-                          title: 'Xóa toàn b? d? li?u',
+                          title: 'Xoa toan bo du lieu',
                           danger: true,
                           showChevron: false,
                         ),
@@ -1379,7 +1369,7 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         SizedBox(height: scale.h(4)),
                         Text(
-                          'C?m on b?n dã l?a ch?n Text2Card d? chinh ph?c Anh ng?',
+                          'Cam on ban da lua chon Text2Card de chinh phuc Anh ngu',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: scale.sp(14),
@@ -1650,5 +1640,3 @@ class _SettingsActionRow extends StatelessWidget {
     );
   }
 }
-
-
