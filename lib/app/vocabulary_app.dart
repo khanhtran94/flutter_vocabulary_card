@@ -1,5 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'app_services.dart';
+import '../features/flashcard/controllers/create_flashcards_controller.dart';
+import '../features/flashcard/controllers/paste_analysis_controller.dart';
 
 part '../core/app_colors.dart';
 part '../utils/scale.dart';
@@ -21,16 +24,17 @@ class VocabularyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         scaffoldBackgroundColor: AppColors.background,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
-          brightness: Brightness.light,
-          surface: AppColors.surface,
-        ).copyWith(
-          primary: AppColors.primary,
-          secondary: AppColors.secondary,
-          tertiary: AppColors.tertiary,
-          surface: AppColors.surface,
-        ),
+        colorScheme:
+            ColorScheme.fromSeed(
+              seedColor: AppColors.primary,
+              brightness: Brightness.light,
+              surface: AppColors.surface,
+            ).copyWith(
+              primary: AppColors.primary,
+              secondary: AppColors.secondary,
+              tertiary: AppColors.tertiary,
+              surface: AppColors.surface,
+            ),
         textTheme: const TextTheme(
           displayLarge: TextStyle(
             fontSize: 32,
@@ -48,24 +52,12 @@ class VocabularyApp extends StatelessWidget {
             fontWeight: FontWeight.w600,
             height: 1.25,
           ),
-          bodyLarge: TextStyle(
-            fontSize: 18,
-            height: 1.45,
-          ),
-          bodyMedium: TextStyle(
-            fontSize: 16,
-            height: 1.45,
-          ),
-          bodySmall: TextStyle(
-            fontSize: 14,
-            height: 1.4,
-          ),
+          bodyLarge: TextStyle(fontSize: 18, height: 1.45),
+          bodyMedium: TextStyle(fontSize: 16, height: 1.45),
+          bodySmall: TextStyle(fontSize: 14, height: 1.4),
         ),
       ),
       home: const ScreenGalleryPage(),
     );
   }
 }
-
-
-
