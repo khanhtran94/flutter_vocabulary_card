@@ -1,4 +1,4 @@
-﻿part of '../../app/vocabulary_app.dart';
+part of '../../app/vocabulary_app.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -6,152 +6,191 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scale = context.scale;
-    return AppShell(
-      title: 'Xin chào, Minh',
-      selectedIndex: 0,
-      child: ListView(
-        padding: EdgeInsets.fromLTRB(scale.w(16), scale.h(8), scale.w(16), scale.h(24)),
-        children: [
-          _HeroCard(
-            title: 'Hôm nay bạn đã học 18 từ',
-            subtitle: 'Còn 6 từ nữa để hoàn thành mục tiêu 30 từ.',
-            progress: 0.6,
-            buttonText: 'Bắt đầu học',
-          ),
-          SizedBox(height: scale.h(16)),
-          Row(
-            children: [
-              Expanded(child: _StatCard(label: 'Đã nhớ', value: '142', icon: Icons.check_circle_outline, color: AppColors.secondary)),
-              SizedBox(width: scale.w(12)),
-              Expanded(child: _StatCard(label: 'Cần ôn', value: '28', icon: Icons.refresh_outlined, color: AppColors.danger)),
-            ],
-          ),
-          SizedBox(height: scale.h(16)),
-          _SectionHeader(title: 'Lối tắt', action: 'Xem tất cả'),
-          SizedBox(height: scale.h(12)),
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 2,
-            crossAxisSpacing: scale.w(12),
-            mainAxisSpacing: scale.h(12),
-            childAspectRatio: 1.55,
-            children: const [
-              _ShortcutCard(title: 'Dán văn bản', icon: Icons.paste_outlined, color: AppColors.primary),
-              _ShortcutCard(title: 'Bộ thẻ', icon: Icons.collections_bookmark_outlined, color: AppColors.secondary),
-              _ShortcutCard(title: 'Lịch ôn', icon: Icons.calendar_month_outlined, color: AppColors.tertiary),
-              _ShortcutCard(title: 'Thống kê', icon: Icons.bar_chart_outlined, color: AppColors.primaryDark),
-            ],
-          ),
-          SizedBox(height: scale.h(16)),
-          _SectionHeader(title: 'Sắp tới', action: 'Chi tiết'),
-          SizedBox(height: scale.h(12)),
-          const _UpcomingList(),
-        ],
-      ),
-    );
-  }
-}
-
-class _HeroCard extends StatelessWidget {
-  const _HeroCard({
-    required this.title,
-    required this.subtitle,
-    required this.progress,
-    required this.buttonText,
-  });
-
-  final String title;
-  final String subtitle;
-  final double progress;
-  final String buttonText;
-
-  @override
-  Widget build(BuildContext context) {
-    final scale = context.scale;
-    return Container(
-      padding: EdgeInsets.all(scale.w(20)),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.primaryDark],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(scale.r(24)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: scale.w(54),
-            height: scale.w(54),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.16),
-              borderRadius: BorderRadius.circular(scale.r(18)),
-            ),
-            child: Icon(Icons.auto_stories_outlined, color: Colors.white, size: scale.w(28)),
-          ),
-          SizedBox(height: scale.h(16)),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: scale.sp(24),
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              height: 1.2,
-            ),
-          ),
-          SizedBox(height: scale.h(8)),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: scale.sp(15),
-              color: Colors.white.withValues(alpha: 0.88),
-              height: 1.45,
-            ),
-          ),
-          SizedBox(height: scale.h(16)),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(scale.r(999)),
-            child: LinearProgressIndicator(
-              minHeight: scale.h(8),
-              value: progress,
-              backgroundColor: Colors.white.withValues(alpha: 0.18),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.secondary),
-            ),
-          ),
-          SizedBox(height: scale.h(12)),
-          SizedBox(
-            width: double.infinity,
-            height: scale.h(48),
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: AppColors.primaryDark,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(scale.r(14))),
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        titleSpacing: scale.w(16),
+        title: Row(
+          children: [
+            Container(
+              width: scale.w(32),
+              height: scale.w(32),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(scale.r(10)),
               ),
-              onPressed: () {},
-              child: Text(buttonText),
+              child: Icon(Icons.style, color: Colors.white, size: scale.w(18)),
+            ),
+            SizedBox(width: scale.w(8)),
+            Text(
+              'Text2Card',
+              style: TextStyle(
+                fontSize: scale.sp(24),
+                fontWeight: FontWeight.w700,
+                color: AppColors.primary,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: scale.w(16)),
+            child: CircleAvatar(
+              radius: scale.w(20),
+              backgroundColor: AppColors.surface,
+              child: Icon(Icons.person, color: AppColors.textSoft, size: scale.w(20)),
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: const _BottomNav(selectedIndex: 0),
+      body: SafeArea(
+        top: false,
+        child: ListView(
+          padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(24), scale.w(20), scale.h(32)),
+          children: [
+            Text.rich(
+              TextSpan(
+                text: 'Chào bạn, hôm nay bạn có ',
+                children: [
+                  TextSpan(
+                    text: '12',
+                    style: TextStyle(color: AppColors.primary),
+                  ),
+                  const TextSpan(text: ' từ cần ôn'),
+                ],
+              ),
+              style: TextStyle(
+                fontSize: scale.sp(28),
+                fontWeight: FontWeight.w700,
+                height: 1.25,
+                color: AppColors.text,
+              ),
+            ),
+            SizedBox(height: scale.h(4)),
+            Text(
+              'Học 10 phút để giữ chuỗi ngày học của bạn.',
+              style: TextStyle(
+                fontSize: scale.sp(16),
+                height: 1.45,
+                color: AppColors.textSoft,
+              ),
+            ),
+            SizedBox(height: scale.h(24)),
+            SizedBox(
+              width: double.infinity,
+              height: scale.h(64),
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF2170E4),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(scale.r(16)),
+                  ),
+                ),
+                onPressed: () {},
+                icon: Icon(Icons.play_circle_fill, size: scale.w(24)),
+                label: Text(
+                  'Bắt đầu học hôm nay',
+                  style: TextStyle(fontSize: scale.sp(20), fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+            SizedBox(height: scale.h(12)),
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              crossAxisSpacing: scale.w(12),
+              mainAxisSpacing: scale.h(12),
+              childAspectRatio: 1,
+              children: const [
+                _DashboardStatCard(
+                  label: 'Cần ôn',
+                  value: '12',
+                  valueColor: AppColors.danger,
+                  icon: Icons.schedule,
+                  iconBackground: Color(0xFFFFDAD6),
+                  iconColor: Color(0xFF93000A),
+                ),
+                _DashboardStatCard(
+                  label: 'Đang học',
+                  value: '35',
+                  valueColor: AppColors.primary,
+                  icon: Icons.auto_stories,
+                  iconBackground: Color(0xFFD8E2FF),
+                  iconColor: Color(0xFF004395),
+                ),
+                _DashboardStatCard(
+                  label: 'Đã ghi nhớ',
+                  value: '60',
+                  valueColor: AppColors.secondary,
+                  icon: Icons.task_alt,
+                  iconBackground: Color(0xFF6CF8BB),
+                  iconColor: Color(0xFF00714D),
+                ),
+                _DashboardStatCard(
+                  label: 'Streak',
+                  value: '5 ngày',
+                  valueColor: AppColors.tertiary,
+                  icon: Icons.local_fire_department,
+                  iconBackground: Color(0xFFFFDAD9),
+                  iconColor: Color(0xFF723335),
+                ),
+              ],
+            ),
+            SizedBox(height: scale.h(12)),
+            _WeeklyProgressCard(scale: scale),
+            SizedBox(height: scale.h(12)),
+            Text(
+              'Thao tác nhanh',
+              style: TextStyle(
+                fontSize: scale.sp(20),
+                fontWeight: FontWeight.w600,
+                color: AppColors.text,
+              ),
+            ),
+            SizedBox(height: scale.h(12)),
+            const _QuickActionButton(
+              icon: Icons.add_box_outlined,
+              title: 'Nhập đoạn tiếng Anh mới',
+            ),
+            SizedBox(height: 12),
+            const _QuickActionButton(
+              icon: Icons.folder_open_outlined,
+              title: 'Xem kho từ vựng',
+            ),
+            SizedBox(height: 12),
+            const _QuickActionButton(
+              icon: Icons.calendar_month_outlined,
+              title: 'Lịch ôn tập',
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _StatCard extends StatelessWidget {
-  const _StatCard({
+class _DashboardStatCard extends StatelessWidget {
+  const _DashboardStatCard({
     required this.label,
     required this.value,
+    required this.valueColor,
     required this.icon,
-    required this.color,
+    required this.iconBackground,
+    required this.iconColor,
   });
 
   final String label;
   final String value;
+  final Color valueColor;
   final IconData icon;
-  final Color color;
+  final Color iconBackground;
+  final Color iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -159,47 +198,9 @@ class _StatCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(scale.w(16)),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(scale.r(18)),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: color, size: scale.w(24)),
-          SizedBox(height: scale.h(18)),
-          Text(
-            value,
-            style: TextStyle(fontSize: scale.sp(26), fontWeight: FontWeight.w700, color: AppColors.text),
-          ),
-          SizedBox(height: scale.h(4)),
-          Text(label, style: TextStyle(fontSize: scale.sp(13), color: AppColors.textSoft)),
-        ],
-      ),
-    );
-  }
-}
-
-class _ShortcutCard extends StatelessWidget {
-  const _ShortcutCard({
-    required this.title,
-    required this.icon,
-    required this.color,
-  });
-
-  final String title;
-  final IconData icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final scale = context.scale;
-    return Container(
-      padding: EdgeInsets.all(scale.w(16)),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(scale.r(18)),
-        border: Border.all(color: AppColors.border),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(scale.r(16)),
+        border: Border.all(color: const Color(0xFFC2C6D6)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,14 +210,32 @@ class _ShortcutCard extends StatelessWidget {
             width: scale.w(40),
             height: scale.w(40),
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
+              color: iconBackground,
               borderRadius: BorderRadius.circular(scale.r(12)),
             ),
-            child: Icon(icon, color: color, size: scale.w(22)),
+            child: Icon(icon, color: iconColor, size: scale.w(22)),
           ),
-          Text(
-            title,
-            style: TextStyle(fontSize: scale.sp(15), fontWeight: FontWeight.w600, color: AppColors.text),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: scale.sp(12),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textSoft,
+                ),
+              ),
+              SizedBox(height: scale.h(4)),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: scale.sp(24),
+                  fontWeight: FontWeight.w700,
+                  color: valueColor,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -224,76 +243,139 @@ class _ShortcutCard extends StatelessWidget {
   }
 }
 
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title, required this.action});
+class _WeeklyProgressCard extends StatelessWidget {
+  const _WeeklyProgressCard({required this.scale});
 
-  final String title;
-  final String action;
+  final Scale scale;
 
   @override
   Widget build(BuildContext context) {
-    final scale = context.scale;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title, style: TextStyle(fontSize: scale.sp(18), fontWeight: FontWeight.w700, color: AppColors.text)),
-        Text(action, style: TextStyle(fontSize: scale.sp(13), color: AppColors.primary, fontWeight: FontWeight.w600)),
-      ],
+    const completedDays = 4;
+    const totalDays = 7;
+    const dayLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+
+    return Container(
+      padding: EdgeInsets.all(scale.w(16)),
+      decoration: BoxDecoration(
+        color: const Color(0xFFECEEF0),
+        borderRadius: BorderRadius.circular(scale.r(16)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Tuần này: 4/7 ngày đã học',
+                style: TextStyle(
+                  fontSize: scale.sp(20),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.text,
+                ),
+              ),
+              Text(
+                'Tốt!',
+                style: TextStyle(
+                  fontSize: scale.sp(12),
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.secondary,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: scale.h(16)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(dayLabels.length, (index) {
+              final completed = index < completedDays;
+              return Column(
+                children: [
+                  Text(
+                    dayLabels[index],
+                    style: TextStyle(
+                      fontSize: scale.sp(10),
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                  SizedBox(height: scale.h(8)),
+                  Container(
+                    width: scale.w(32),
+                    height: scale.w(32),
+                    decoration: BoxDecoration(
+                      color: completed ? AppColors.secondary : const Color(0xFFE0E3E5),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      completed ? Icons.check : Icons.radio_button_unchecked,
+                      size: scale.w(18),
+                      color: completed ? Colors.white : AppColors.textMuted,
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
+          SizedBox(height: scale.h(24)),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(scale.r(999)),
+            child: LinearProgressIndicator(
+              value: 4 / totalDays,
+              minHeight: scale.h(8),
+              backgroundColor: const Color(0xFFE0E3E5),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.secondary),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _UpcomingList extends StatelessWidget {
-  const _UpcomingList();
+class _QuickActionButton extends StatelessWidget {
+  const _QuickActionButton({
+    required this.icon,
+    required this.title,
+  });
+
+  final IconData icon;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     final scale = context.scale;
-    final items = [
-      ('Study today', '08:30', AppColors.primary),
-      ('Review flashcards', '12:15', AppColors.secondary),
-      ('Quiz practice', '20:00', AppColors.tertiary),
-    ];
-    return Column(
-      children: items
-          .map(
-            (item) => Padding(
-              padding: EdgeInsets.only(bottom: scale.h(12)),
-              child: Container(
-                padding: EdgeInsets.all(scale.w(16)),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(scale.r(18)),
-                  border: Border.all(color: AppColors.border),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: scale.w(12),
-                      height: scale.w(12),
-                      decoration: BoxDecoration(color: item.$3, shape: BoxShape.circle),
-                    ),
-                    SizedBox(width: scale.w(12)),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(item.$1, style: TextStyle(fontSize: scale.sp(15), fontWeight: FontWeight.w600)),
-                          SizedBox(height: scale.h(4)),
-                          Text('Ngày hôm nay', style: TextStyle(fontSize: scale.sp(13), color: AppColors.textSoft)),
-                        ],
-                      ),
-                    ),
-                    Text(item.$2, style: TextStyle(fontSize: scale.sp(13), color: AppColors.textMuted)),
-                  ],
+    return SizedBox(
+      width: double.infinity,
+      height: scale.h(56),
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: AppColors.text,
+          side: const BorderSide(color: Color(0xFFC2C6D6)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(scale.r(16)),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: scale.w(16)),
+        ),
+        onPressed: () {},
+        child: Row(
+          children: [
+            Icon(icon, color: AppColors.primary, size: scale.w(24)),
+            SizedBox(width: scale.w(16)),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: scale.sp(16),
+                  color: AppColors.text,
                 ),
               ),
             ),
-          )
-          .toList(),
+            Icon(Icons.chevron_right, color: const Color(0xFF727785), size: scale.w(22)),
+          ],
+        ),
+      ),
     );
   }
 }
-
-
-
