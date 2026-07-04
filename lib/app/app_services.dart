@@ -3,6 +3,8 @@ import '../data/repositories/card_repository.dart';
 import '../data/repositories/deck_repository.dart';
 import '../data/repositories/review_repository.dart';
 import '../data/repositories/stats_repository.dart';
+import '../features/flashcard/services/translation_service.dart';
+import '../features/flashcard/services/vocabulary_extractor.dart';
 
 class AppServices {
   AppServices._() {
@@ -10,6 +12,7 @@ class AppServices {
     cardRepository = CardRepository(database);
     reviewRepository = ReviewRepository(database);
     statsRepository = StatsRepository(database);
+    translationService = MyMemoryTranslationService();
   }
 
   static final AppServices instance = AppServices._();
@@ -19,4 +22,6 @@ class AppServices {
   late final CardRepository cardRepository;
   late final ReviewRepository reviewRepository;
   late final StatsRepository statsRepository;
+  late final TranslationService translationService;
+  final VocabularyExtractor vocabularyExtractor = VocabularyExtractor();
 }

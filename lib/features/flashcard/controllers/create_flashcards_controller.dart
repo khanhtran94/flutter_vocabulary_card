@@ -19,8 +19,8 @@ class CreateFlashcardsController extends ChangeNotifier {
   CreateFlashcardsController({
     required DeckRepository deckRepository,
     required CardRepository cardRepository,
-  })  : _deckRepository = deckRepository,
-        _cardRepository = cardRepository;
+  }) : _deckRepository = deckRepository,
+       _cardRepository = cardRepository;
 
   final DeckRepository _deckRepository;
   final CardRepository _cardRepository;
