@@ -10,9 +10,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_application_1/app/vocabulary_app.dart';
 
 void main() {
-  testWidgets('renders gallery', (WidgetTester tester) async {
+  testWidgets('renders dashboard as the app home', (WidgetTester tester) async {
     await tester.pumpWidget(const VocabularyApp());
 
-    expect(find.text('VocabFlow Screens'), findsOneWidget);
+    expect(find.text('Text2Card'), findsOneWidget);
   });
 }

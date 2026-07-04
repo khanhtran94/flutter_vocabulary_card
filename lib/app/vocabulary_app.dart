@@ -60,7 +60,7 @@ class VocabularyApp extends StatelessWidget {
           bodySmall: TextStyle(fontSize: 14, height: 1.4),
         ),
       ),
-      home: const ScreenGalleryPage(),
+      home: const DashboardScreen(),
     );
   }
 }

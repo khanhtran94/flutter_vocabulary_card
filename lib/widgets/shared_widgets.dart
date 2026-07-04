@@ -203,6 +203,25 @@ class _BottomNav extends StatelessWidget {
 
   final int selectedIndex;
 
+  Widget _screenForIndex(int index) {
+    return switch (index) {
+      0 => const DashboardScreen(),
+      1 => const StudyTodayScreen(),
+      2 => const VocabularyLibraryScreen(),
+      3 => const StatisticsScreen(),
+      _ => const DashboardScreen(),
+    };
+  }
+
+  void _selectTab(BuildContext context, int index) {
+    if (index == selectedIndex) {
+      return;
+    }
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => _screenForIndex(index)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final scale = context.scale;
@@ -226,26 +245,42 @@ class _BottomNav extends StatelessWidget {
               final item = items[index];
               final active = index == selectedIndex;
               return Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: scale.h(10)),
-                  decoration: BoxDecoration(
-                    color: active ? AppColors.primary.withValues(alpha: 0.10) : Colors.transparent,
-                    borderRadius: BorderRadius.circular(scale.r(14)),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(item.$1, color: active ? AppColors.primary : AppColors.textMuted, size: scale.w(22)),
-                      SizedBox(height: scale.h(4)),
-                      Text(
-                        item.$2,
-                        style: TextStyle(
-                          fontSize: scale.sp(11),
-                          fontWeight: active ? FontWeight.w700 : FontWeight.w500,
-                          color: active ? AppColors.primary : AppColors.textMuted,
+                child: InkWell(
+                  onTap: () => _selectTab(context, index),
+                  borderRadius: BorderRadius.circular(scale.r(14)),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: scale.h(10)),
+                    decoration: BoxDecoration(
+                      color: active
+                          ? AppColors.primary.withValues(alpha: 0.10)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(scale.r(14)),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          item.$1,
+                          color: active
+                              ? AppColors.primary
+                              : AppColors.textMuted,
+                          size: scale.w(22),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: scale.h(4)),
+                        Text(
+                          item.$2,
+                          style: TextStyle(
+                            fontSize: scale.sp(11),
+                            fontWeight: active
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                            color: active
+                                ? AppColors.primary
+                                : AppColors.textMuted,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
