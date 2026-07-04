@@ -6,6 +6,7 @@ class ScreenGalleryPage extends StatelessWidget {
   static final screens = <_DemoScreen>[
     _DemoScreen('1. Dashboard / Home', Icons.home_outlined, (c) => const DashboardScreen()),
     _DemoScreen('2. Paste Text screen', Icons.paste_outlined, (c) => const PasteTextScreen()),
+    _DemoScreen('2B. Create offline deck', Icons.add_card, (c) => const CreateDeckScreen()),
     _DemoScreen('3. Extracted Vocabulary Preview', Icons.view_list_outlined, (c) => const ExtractedPreviewScreen()),
     _DemoScreen('4. Flashcard Created Success', Icons.check_circle_outline, (c) => const FlashcardCreatedSuccessScreen()),
     _DemoScreen('5. Study Today screen', Icons.today_outlined, (c) => const StudyTodayScreen()),

@@ -1,5 +1,187 @@
 ﻿part of '../../app/vocabulary_app.dart';
 
+class CreateDeckScreen extends StatefulWidget {
+  const CreateDeckScreen({super.key});
+
+  @override
+  State<CreateDeckScreen> createState() => _CreateDeckScreenState();
+}
+
+class _CreateDeckScreenState extends State<CreateDeckScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _deckNameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _englishController = TextEditingController();
+  final _vietnameseController = TextEditingController();
+  final List<NewFlashcard> _cards = [];
+  late final CreateFlashcardsController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    final services = AppServices.instance;
+    _controller = CreateFlashcardsController(
+      deckRepository: services.deckRepository,
+      cardRepository: services.cardRepository,
+    )..addListener(_refresh);
+  }
+
+  @override
+  void dispose() {
+    _controller
+      ..removeListener(_refresh)
+      ..dispose();
+    _deckNameController.dispose();
+    _descriptionController.dispose();
+    _englishController.dispose();
+    _vietnameseController.dispose();
+    super.dispose();
+  }
+
+  void _refresh() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _addCard() {
+    final english = _englishController.text.trim();
+    final vietnamese = _vietnameseController.text.trim();
+    if (english.isEmpty || vietnamese.isEmpty) {
+      return;
+    }
+    setState(() {
+      _cards.add(NewFlashcard(english: english, vietnamese: vietnamese));
+      _englishController.clear();
+      _vietnameseController.clear();
+    });
+  }
+
+  Future<void> _save() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    if (_englishController.text.trim().isNotEmpty ||
+        _vietnameseController.text.trim().isNotEmpty) {
+      _addCard();
+    }
+    final deckId = await _controller.createDeckWithCards(
+      deckName: _deckNameController.text,
+      description: _descriptionController.text,
+      cards: _cards,
+    );
+    if (!mounted) {
+      return;
+    }
+    if (deckId != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã lưu bộ flashcard trên thiết bị.')),
+      );
+      Navigator.of(context).pop();
+    } else if (_controller.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_controller.errorMessage!)),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scale = context.scale;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Tạo bộ flashcard offline')),
+      backgroundColor: AppColors.background,
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          padding: EdgeInsets.all(scale.w(20)),
+          children: [
+            TextFormField(
+              controller: _deckNameController,
+              decoration: const InputDecoration(
+                labelText: 'Tên bộ thẻ',
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) => value == null || value.trim().isEmpty
+                  ? 'Vui lòng nhập tên bộ thẻ'
+                  : null,
+            ),
+            SizedBox(height: scale.h(12)),
+            TextFormField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(
+                labelText: 'Mô tả (không bắt buộc)',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: scale.h(24)),
+            Text(
+              'Thêm flashcard',
+              style: TextStyle(
+                fontSize: scale.sp(20),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: scale.h(12)),
+            TextFormField(
+              controller: _englishController,
+              decoration: const InputDecoration(
+                labelText: 'Tiếng Anh',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: scale.h(12)),
+            TextFormField(
+              controller: _vietnameseController,
+              decoration: const InputDecoration(
+                labelText: 'Nghĩa tiếng Việt',
+                border: OutlineInputBorder(),
+              ),
+              onFieldSubmitted: (_) => _addCard(),
+            ),
+            SizedBox(height: scale.h(12)),
+            OutlinedButton.icon(
+              onPressed: _addCard,
+              icon: const Icon(Icons.add),
+              label: const Text('Thêm vào danh sách'),
+            ),
+            if (_cards.isNotEmpty) ...[
+              SizedBox(height: scale.h(20)),
+              ..._cards.indexed.map(
+                (entry) => Card(
+                  child: ListTile(
+                    title: Text(entry.$2.english),
+                    subtitle: Text(entry.$2.vietnamese),
+                    trailing: IconButton(
+                      onPressed: () => setState(() => _cards.removeAt(entry.$1)),
+                      icon: const Icon(Icons.delete_outline),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            SizedBox(height: scale.h(24)),
+            FilledButton.icon(
+              onPressed: _controller.isSaving ? null : _save,
+              icon: _controller.isSaving
+                  ? const SizedBox.square(
+                      dimension: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.save),
+              label: Text(
+                _controller.isSaving
+                    ? 'Đang lưu...'
+                    : 'Lưu bộ thẻ (${_cards.length})',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class PasteTextScreen extends StatelessWidget {
   const PasteTextScreen({super.key});
 

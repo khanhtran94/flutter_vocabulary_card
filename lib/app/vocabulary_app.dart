@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'app_services.dart';
+import '../features/flashcard/controllers/create_flashcards_controller.dart';
 
 part '../core/app_colors.dart';
 part '../utils/scale.dart';
