@@ -21,7 +21,9 @@ class CardRepository {
     String? audioPath,
   }) {
     final now = DateTime.now();
-    return _database.into(_database.cards).insert(
+    return _database
+        .into(_database.cards)
+        .insert(
           CardsCompanion.insert(
             deckId: deckId,
             english: english.trim(),
@@ -38,6 +40,13 @@ class CardRepository {
     final query = _database.select(_database.cards)
       ..where((card) => card.deckId.equals(deckId))
       ..orderBy([(card) => OrderingTerm.asc(card.createdAt)]);
+    return query.get();
+  }
+
+  Future<List<Card>> getAllCards() {
+    final query = _database.select(_database.cards)
+      ..where((card) => card.status.isNotValue(archivedStatus))
+      ..orderBy([(card) => OrderingTerm.desc(card.updatedAt)]);
     return query.get();
   }
 
@@ -70,36 +79,36 @@ class CardRepository {
         ..where((card) => card.id.equals(cardId));
       final card = await cardQuery.getSingle();
       final now = DateTime.now();
-      final nextReviewCount =
-          isCorrect ? card.reviewCount + 1 : card.reviewCount;
-      final nextStatus = isCorrect &&
-              nextReviewCount >= reviewIntervals.length
+      final nextReviewCount = isCorrect
+          ? card.reviewCount + 1
+          : card.reviewCount;
+      final nextStatus = isCorrect && nextReviewCount >= reviewIntervals.length
           ? masteredStatus
           : learningStatus;
       final nextReviewDate = isCorrect
-          ? startOfDay(now).add(
-              Duration(days: getNextReviewInterval(nextReviewCount)),
-            )
+          ? startOfDay(
+              now,
+            ).add(Duration(days: getNextReviewInterval(nextReviewCount)))
           : startOfDay(now);
 
-      await (_database.update(_database.cards)
-            ..where((row) => row.id.equals(cardId)))
-          .write(
+      await (_database.update(
+        _database.cards,
+      )..where((row) => row.id.equals(cardId))).write(
         CardsCompanion(
           reviewCount: Value(nextReviewCount),
           correctCount: Value(
             isCorrect ? card.correctCount + 1 : card.correctCount,
           ),
-          wrongCount: Value(
-            isCorrect ? card.wrongCount : card.wrongCount + 1,
-          ),
+          wrongCount: Value(isCorrect ? card.wrongCount : card.wrongCount + 1),
           status: Value(nextStatus),
           nextReviewDate: Value(nextReviewDate),
           updatedAt: Value(now),
         ),
       );
 
-      await _database.into(_database.reviewLogs).insert(
+      await _database
+          .into(_database.reviewLogs)
+          .insert(
             ReviewLogsCompanion.insert(
               cardId: cardId,
               isCorrect: isCorrect,
@@ -116,9 +125,9 @@ class CardRepository {
     required String vietnamese,
     String? audioPath,
   }) async {
-    await (_database.update(_database.cards)
-          ..where((card) => card.id.equals(cardId)))
-        .write(
+    await (_database.update(
+      _database.cards,
+    )..where((card) => card.id.equals(cardId))).write(
       CardsCompanion(
         english: Value(english.trim()),
         vietnamese: Value(vietnamese.trim()),
@@ -129,9 +138,9 @@ class CardRepository {
   }
 
   Future<void> archiveCard(int cardId) async {
-    await (_database.update(_database.cards)
-          ..where((card) => card.id.equals(cardId)))
-        .write(
+    await (_database.update(
+      _database.cards,
+    )..where((card) => card.id.equals(cardId))).write(
       CardsCompanion(
         status: const Value(archivedStatus),
         updatedAt: Value(DateTime.now()),
@@ -140,9 +149,9 @@ class CardRepository {
   }
 
   Future<void> deleteCard(int cardId) async {
-    await (_database.delete(_database.cards)
-          ..where((card) => card.id.equals(cardId)))
-        .go();
+    await (_database.delete(
+      _database.cards,
+    )..where((card) => card.id.equals(cardId))).go();
   }
 
   Future<List<Card>> _getCardsByStatus(String status) {

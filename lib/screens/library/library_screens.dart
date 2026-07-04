@@ -1,7 +1,66 @@
-﻿part of '../../app/vocabulary_app.dart';
+part of '../../app/vocabulary_app.dart';
 
-class VocabularyLibraryScreen extends StatelessWidget {
-  const VocabularyLibraryScreen({super.key});
+class VocabularyLibraryScreen extends StatefulWidget {
+  const VocabularyLibraryScreen({super.key, this.controller});
+
+  final VocabularyLibraryController? controller;
+
+  @override
+  State<VocabularyLibraryScreen> createState() =>
+      _VocabularyLibraryScreenState();
+}
+
+class _VocabularyLibraryScreenState extends State<VocabularyLibraryScreen> {
+  late final VocabularyLibraryController _controller;
+  late final bool _ownsController;
+
+  @override
+  void initState() {
+    super.initState();
+    _ownsController = widget.controller == null;
+    _controller =
+        widget.controller ??
+        VocabularyLibraryController(AppServices.instance.cardRepository);
+    _controller
+      ..addListener(_refresh)
+      ..loadCards();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_refresh);
+    if (_ownsController) {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _refresh() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> _openCreateScreen() async {
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const PasteTextScreen()));
+    await _controller.loadCards();
+  }
+
+  String _statusText(LibraryCardItem card) {
+    if (card.isMastered) {
+      return 'Đã thành thạo hoàn toàn';
+    }
+    if (card.isDue) {
+      return 'Cần ôn hôm nay';
+    }
+    final days = card.nextReviewDate
+        .difference(DateTime.now())
+        .inDays
+        .clamp(1, 999);
+    return 'Ôn tiếp sau $days ngày';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +73,15 @@ class VocabularyLibraryScreen extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(12), scale.w(20), scale.h(12)),
+              padding: EdgeInsets.fromLTRB(
+                scale.w(20),
+                scale.h(12),
+                scale.w(20),
+                scale.h(12),
+              ),
               decoration: const BoxDecoration(
                 color: AppColors.background,
-                border: Border(
-                  bottom: BorderSide(color: Color(0xFFC2C6D6)),
-                ),
+                border: Border(bottom: BorderSide(color: Color(0xFFC2C6D6))),
               ),
               child: Row(
                 children: [
@@ -30,7 +92,11 @@ class VocabularyLibraryScreen extends StatelessWidget {
                       color: AppColors.primaryContainer,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.person, color: AppColors.onPrimaryContainer, size: scale.w(20)),
+                    child: Icon(
+                      Icons.person,
+                      color: AppColors.onPrimaryContainer,
+                      size: scale.w(20),
+                    ),
                   ),
                   SizedBox(width: scale.w(12)),
                   Expanded(
@@ -44,7 +110,7 @@ class VocabularyLibraryScreen extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: _openCreateScreen,
                     icon: const Icon(Icons.add),
                     color: AppColors.primary,
                   ),
@@ -53,7 +119,12 @@ class VocabularyLibraryScreen extends StatelessWidget {
             ),
             Expanded(
               child: ListView(
-                padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(16), scale.w(20), scale.h(24)),
+                padding: EdgeInsets.fromLTRB(
+                  scale.w(20),
+                  scale.h(16),
+                  scale.w(20),
+                  scale.h(24),
+                ),
                 children: [
                   Row(
                     children: [
@@ -66,6 +137,7 @@ class VocabularyLibraryScreen extends StatelessWidget {
                             border: Border.all(color: const Color(0xFFC2C6D6)),
                           ),
                           child: TextField(
+                            onChanged: _controller.setSearchQuery,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Tìm từ hoặc nghĩa...',
@@ -73,8 +145,14 @@ class VocabularyLibraryScreen extends StatelessWidget {
                                 fontSize: scale.sp(16),
                                 color: AppColors.textSoft,
                               ),
-                              prefixIcon: Icon(Icons.search, color: AppColors.textSoft, size: scale.w(22)),
-                              contentPadding: EdgeInsets.symmetric(vertical: scale.h(14)),
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: AppColors.textSoft,
+                                size: scale.w(22),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: scale.h(14),
+                              ),
                             ),
                           ),
                         ),
@@ -88,7 +166,11 @@ class VocabularyLibraryScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(scale.r(16)),
                           border: Border.all(color: const Color(0xFFC2C6D6)),
                         ),
-                        child: Icon(Icons.filter_list, color: AppColors.primary, size: scale.w(24)),
+                        child: Icon(
+                          Icons.filter_list,
+                          color: AppColors.primary,
+                          size: scale.w(24),
+                        ),
                       ),
                     ],
                   ),
@@ -96,60 +178,98 @@ class VocabularyLibraryScreen extends StatelessWidget {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: const [
-                        _LibraryTab(label: 'Tất cả', selected: true),
-                        SizedBox(width: 12),
-                        _LibraryTab(label: 'Đang học'),
-                        SizedBox(width: 12),
-                        _LibraryTab(label: 'Cần ôn'),
-                        SizedBox(width: 12),
-                        _LibraryTab(label: 'Đã ghi nhớ'),
+                      children: [
+                        _LibraryTab(
+                          label: 'Tất cả',
+                          selected: _controller.filter == LibraryFilter.all,
+                          onTap: () => _controller.setFilter(LibraryFilter.all),
+                        ),
+                        const SizedBox(width: 12),
+                        _LibraryTab(
+                          label: 'Đang học',
+                          selected:
+                              _controller.filter == LibraryFilter.learning,
+                          onTap: () =>
+                              _controller.setFilter(LibraryFilter.learning),
+                        ),
+                        const SizedBox(width: 12),
+                        _LibraryTab(
+                          label: 'Cần ôn',
+                          selected: _controller.filter == LibraryFilter.due,
+                          onTap: () => _controller.setFilter(LibraryFilter.due),
+                        ),
+                        const SizedBox(width: 12),
+                        _LibraryTab(
+                          label: 'Đã ghi nhớ',
+                          selected:
+                              _controller.filter == LibraryFilter.mastered,
+                          onTap: () =>
+                              _controller.setFilter(LibraryFilter.mastered),
+                        ),
                       ],
                     ),
                   ),
                   SizedBox(height: scale.h(24)),
-                  const _VocabularyProgressCard(
-                    word: 'consistency',
-                    meaning: 'sự đều đặn, tính kiên định',
-                    badgeLabel: 'Reviewing',
-                    badgeBackground: Color(0xFF6CF8BB),
-                    badgeForeground: Color(0xFF00714D),
-                    progress: 0.8,
-                    progressText: '4/5',
-                    progressColor: AppColors.secondary,
-                    statusIcon: Icons.event_repeat,
-                    statusText: 'Ôn tiếp sau 2 ngày',
-                    statusColor: AppColors.primary,
-                  ),
-                  SizedBox(height: 16),
-                  const _VocabularyProgressCard(
-                    word: 'resilience',
-                    meaning: 'khả năng phục hồi, sự kiên cường',
-                    badgeLabel: 'Learning',
-                    badgeBackground: Color(0xFFFFDAD9),
-                    badgeForeground: Color(0xFF723335),
-                    progress: 0.4,
-                    progressText: '2/5',
-                    progressColor: AppColors.tertiary,
-                    statusIcon: Icons.history,
-                    statusText: 'Vừa mới học xong',
-                    statusColor: AppColors.tertiary,
-                  ),
-                  SizedBox(height: 16),
-                  const _VocabularyProgressCard(
-                    word: 'meticulous',
-                    meaning: 'tỉ mỉ, trau chuốt',
-                    badgeLabel: 'Mastered',
-                    badgeBackground: Color(0xFFD8E2FF),
-                    badgeForeground: Color(0xFF004395),
-                    progress: 1,
-                    progressText: '5/5',
-                    progressColor: AppColors.primary,
-                    statusIcon: Icons.verified,
-                    statusText: 'Đã thành thạo hoàn toàn',
-                    statusColor: AppColors.secondary,
-                    statusFilled: true,
-                  ),
+                  if (_controller.isLoading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (_controller.errorMessage != null)
+                    _LibraryMessage(
+                      icon: Icons.cloud_off,
+                      message: _controller.errorMessage!,
+                      actionLabel: 'Thử lại',
+                      onAction: _controller.loadCards,
+                    )
+                  else if (_controller.visibleCards.isEmpty)
+                    _LibraryMessage(
+                      icon: Icons.menu_book_outlined,
+                      message: _controller.searchQuery.isEmpty
+                          ? 'Chưa có từ vựng trong mục này.'
+                          : 'Không tìm thấy từ phù hợp.',
+                      actionLabel: _controller.searchQuery.isEmpty
+                          ? 'Tạo flashcard'
+                          : null,
+                      onAction: _controller.searchQuery.isEmpty
+                          ? _openCreateScreen
+                          : null,
+                    )
+                  else
+                    ..._controller.visibleCards.indexed.map(
+                      (entry) => Padding(
+                        padding: EdgeInsets.only(
+                          bottom:
+                              entry.$1 == _controller.visibleCards.length - 1
+                              ? 0
+                              : scale.h(16),
+                        ),
+                        child: _VocabularyProgressCard(
+                          word: entry.$2.english,
+                          meaning: entry.$2.vietnamese,
+                          badgeLabel: entry.$2.isMastered
+                              ? 'Mastered'
+                              : 'Learning',
+                          badgeBackground: entry.$2.isMastered
+                              ? const Color(0xFFD8E2FF)
+                              : const Color(0xFF6CF8BB),
+                          badgeForeground: entry.$2.isMastered
+                              ? const Color(0xFF004395)
+                              : const Color(0xFF00714D),
+                          progress: entry.$2.progress,
+                          progressText:
+                              '${entry.$2.reviewCount}/${reviewIntervals.length}',
+                          progressColor: entry.$2.isMastered
+                              ? AppColors.primary
+                              : AppColors.secondary,
+                          statusIcon: entry.$2.isDue
+                              ? Icons.history
+                              : Icons.event_repeat,
+                          statusText: _statusText(entry.$2),
+                          statusColor: entry.$2.isMastered
+                              ? AppColors.secondary
+                              : AppColors.primary,
+                          statusFilled: entry.$2.isMastered,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -164,36 +284,82 @@ class _LibraryTab extends StatelessWidget {
   const _LibraryTab({
     required this.label,
     this.selected = false,
+    required this.onTap,
   });
 
   final String label;
   final bool selected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final scale = context.scale;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: scale.w(16), vertical: scale.h(8)),
-      decoration: BoxDecoration(
-        color: selected ? AppColors.primary : const Color(0xFFE6E8EA),
-        borderRadius: BorderRadius.circular(scale.r(999)),
-        boxShadow: selected
-            ? const [
-                BoxShadow(
-                  color: Color(0x14000000),
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ]
-            : null,
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: scale.sp(12),
-          fontWeight: FontWeight.w600,
-          color: selected ? Colors.white : AppColors.textSoft,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(scale.r(999)),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: scale.w(16),
+          vertical: scale.h(8),
         ),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.primary : const Color(0xFFE6E8EA),
+          borderRadius: BorderRadius.circular(scale.r(999)),
+          boxShadow: selected
+              ? const [
+                  BoxShadow(
+                    color: Color(0x14000000),
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: scale.sp(12),
+            fontWeight: FontWeight.w600,
+            color: selected ? Colors.white : AppColors.textSoft,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LibraryMessage extends StatelessWidget {
+  const _LibraryMessage({
+    required this.icon,
+    required this.message,
+    this.actionLabel,
+    this.onAction,
+  });
+
+  final IconData icon;
+  final String message;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    final scale = context.scale;
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: scale.h(48)),
+      child: Column(
+        children: [
+          Icon(icon, size: scale.w(52), color: AppColors.textMuted),
+          SizedBox(height: scale.h(12)),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: scale.sp(16), color: AppColors.textSoft),
+          ),
+          if (actionLabel != null && onAction != null) ...[
+            SizedBox(height: scale.h(16)),
+            FilledButton(onPressed: onAction, child: Text(actionLabel!)),
+          ],
+        ],
       ),
     );
   }
@@ -287,7 +453,10 @@ class _VocabularyProgressCard extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: scale.w(12), vertical: scale.h(4)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: scale.w(12),
+                  vertical: scale.h(4),
+                ),
                 decoration: BoxDecoration(
                   color: badgeBackground,
                   borderRadius: BorderRadius.circular(scale.r(999)),
@@ -375,12 +544,15 @@ class FlashcardDetailScreen extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(8), scale.w(20), scale.h(8)),
+              padding: EdgeInsets.fromLTRB(
+                scale.w(20),
+                scale.h(8),
+                scale.w(20),
+                scale.h(8),
+              ),
               decoration: const BoxDecoration(
                 color: AppColors.background,
-                border: Border(
-                  bottom: BorderSide(color: Color(0xFFC2C6D6)),
-                ),
+                border: Border(bottom: BorderSide(color: Color(0xFFC2C6D6))),
               ),
               child: Row(
                 children: [
@@ -410,7 +582,12 @@ class FlashcardDetailScreen extends StatelessWidget {
             ),
             Expanded(
               child: ListView(
-                padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(16), scale.w(20), scale.h(24)),
+                padding: EdgeInsets.fromLTRB(
+                  scale.w(20),
+                  scale.h(16),
+                  scale.w(20),
+                  scale.h(24),
+                ),
                 children: [
                   Container(
                     height: scale.h(420),
@@ -456,7 +633,11 @@ class FlashcardDetailScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Icon(Icons.verified, color: const Color(0xFF4EDEA3), size: scale.w(22)),
+                            Icon(
+                              Icons.verified,
+                              color: const Color(0xFF4EDEA3),
+                              size: scale.w(22),
+                            ),
                           ],
                         ),
                         SizedBox(height: scale.h(24)),
@@ -519,7 +700,10 @@ class FlashcardDetailScreen extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: scale.w(12), vertical: scale.h(6)),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: scale.w(12),
+                          vertical: scale.h(6),
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFF6CF8BB),
                           borderRadius: BorderRadius.circular(scale.r(999)),
@@ -636,7 +820,9 @@ class FlashcardDetailScreen extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(scale.r(16)),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: scale.h(14)),
+                            padding: EdgeInsets.symmetric(
+                              vertical: scale.h(14),
+                            ),
                           ),
                           onPressed: () {},
                           icon: Icon(Icons.edit_note, size: scale.w(18)),
@@ -658,7 +844,9 @@ class FlashcardDetailScreen extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(scale.r(16)),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: scale.h(14)),
+                            padding: EdgeInsets.symmetric(
+                              vertical: scale.h(14),
+                            ),
                           ),
                           onPressed: () {},
                           icon: Icon(Icons.delete, size: scale.w(18)),
@@ -700,18 +888,12 @@ class _FlashcardProgressTimeline extends StatelessWidget {
               Positioned(
                 left: 0,
                 right: 0,
-                child: Container(
-                  height: 2,
-                  color: const Color(0xFFC2C6D6),
-                ),
+                child: Container(height: 2, color: const Color(0xFFC2C6D6)),
               ),
               Positioned(
                 left: 0,
                 right: scale.w(170),
-                child: Container(
-                  height: 2,
-                  color: AppColors.secondary,
-                ),
+                child: Container(height: 2, color: AppColors.secondary),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -802,8 +984,8 @@ class _TimelineStep extends StatelessWidget {
             color: active
                 ? AppColors.primary
                 : completed
-                    ? AppColors.textSoft
-                    : AppColors.textMuted,
+                ? AppColors.textSoft
+                : AppColors.textMuted,
           ),
         ),
       ],
@@ -897,10 +1079,7 @@ class _FlashcardMetaRow extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: scale.sp(14),
-              color: AppColors.textSoft,
-            ),
+            style: TextStyle(fontSize: scale.sp(14), color: AppColors.textSoft),
           ),
         ),
         Text(
@@ -915,5 +1094,3 @@ class _FlashcardMetaRow extends StatelessWidget {
     );
   }
 }
-
-
