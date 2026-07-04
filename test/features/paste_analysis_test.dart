@@ -57,10 +57,9 @@ void main() {
         extractor: VocabularyExtractor(),
         translationService: _FakeTranslationService(),
       );
-      final createController = CreateFlashcardsController(
-        deckRepository: deckRepository,
-        cardRepository: cardRepository,
-      );
+    final createController = CreateFlashcardsController(
+      deckRepository: deckRepository,
+    );
 
       final analyzed = await analysisController.analyze(
         'Learners struggle with advanced terminology.',
