@@ -4,6 +4,7 @@ import 'app_services.dart';
 import '../features/flashcard/controllers/create_flashcards_controller.dart';
 import '../features/flashcard/controllers/paste_analysis_controller.dart';
 import '../features/flashcard/controllers/vocabulary_library_controller.dart';
+import '../features/flashcard/controllers/study_session_controller.dart';
 import '../core/constants/review_intervals.dart';
 
 part '../core/app_colors.dart';
