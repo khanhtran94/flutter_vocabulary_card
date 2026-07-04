@@ -1,7 +1,55 @@
-﻿part of '../../app/vocabulary_app.dart';
+part of '../../app/vocabulary_app.dart';
 
-class StudyTodayScreen extends StatelessWidget {
-  const StudyTodayScreen({super.key});
+class StudyTodayScreen extends StatefulWidget {
+  const StudyTodayScreen({super.key, this.controller});
+
+  final StudySessionController? controller;
+
+  @override
+  State<StudyTodayScreen> createState() => _StudyTodayScreenState();
+}
+
+class _StudyTodayScreenState extends State<StudyTodayScreen> {
+  late final StudySessionController _controller;
+  late final bool _ownsController;
+
+  @override
+  void initState() {
+    super.initState();
+    _ownsController = widget.controller == null;
+    _controller =
+        widget.controller ??
+        StudySessionController(AppServices.instance.cardRepository);
+    _controller
+      ..addListener(_refresh)
+      ..loadToday();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_refresh);
+    if (_ownsController) {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _refresh() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> _startStudy() async {
+    final completed = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => FlashcardStudyScreen(controller: _controller),
+      ),
+    );
+    if (completed == true) {
+      await _controller.loadToday();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +62,15 @@ class StudyTodayScreen extends StatelessWidget {
           Column(
             children: [
               Container(
-                padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(18), scale.w(20), scale.h(12)),
+                padding: EdgeInsets.fromLTRB(
+                  scale.w(20),
+                  scale.h(18),
+                  scale.w(20),
+                  scale.h(12),
+                ),
                 decoration: const BoxDecoration(
                   color: AppColors.background,
-                  border: Border(
-                    bottom: BorderSide(color: Color(0xFFC2C6D6)),
-                  ),
+                  border: Border(bottom: BorderSide(color: Color(0xFFC2C6D6))),
                 ),
                 child: SafeArea(
                   bottom: false,
@@ -31,7 +82,11 @@ class StudyTodayScreen extends StatelessWidget {
                           CircleAvatar(
                             radius: scale.w(20),
                             backgroundColor: const Color(0xFFD8E2FF),
-                            child: Icon(Icons.person, color: AppColors.primary, size: scale.w(20)),
+                            child: Icon(
+                              Icons.person,
+                              color: AppColors.primary,
+                              size: scale.w(20),
+                            ),
                           ),
                           SizedBox(width: scale.w(12)),
                           Text(
@@ -45,7 +100,14 @@ class StudyTodayScreen extends StatelessWidget {
                         ],
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const PasteTextScreen(),
+                            ),
+                          );
+                          await _controller.loadToday();
+                        },
                         icon: const Icon(Icons.add),
                         color: AppColors.primary,
                       ),
@@ -55,7 +117,12 @@ class StudyTodayScreen extends StatelessWidget {
               ),
               Expanded(
                 child: ListView(
-                  padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(24), scale.w(20), scale.h(170)),
+                  padding: EdgeInsets.fromLTRB(
+                    scale.w(20),
+                    scale.h(24),
+                    scale.w(20),
+                    scale.h(170),
+                  ),
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +141,7 @@ class StudyTodayScreen extends StatelessWidget {
                               ),
                               SizedBox(height: scale.h(4)),
                               Text(
-                                'Bạn có 12 từ cần ôn để giữ tiến độ.',
+                                'Bạn có ${_controller.cards.length} từ cần ôn để giữ tiến độ.',
                                 style: TextStyle(
                                   fontSize: scale.sp(16),
                                   color: AppColors.textSoft,
@@ -84,7 +151,10 @@ class StudyTodayScreen extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: scale.w(12), vertical: scale.h(8)),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: scale.w(12),
+                            vertical: scale.h(8),
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFF6CF8BB),
                             borderRadius: BorderRadius.circular(scale.r(12)),
@@ -92,7 +162,11 @@ class StudyTodayScreen extends StatelessWidget {
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.local_fire_department, size: scale.w(18), color: const Color(0xFF00714D)),
+                              Icon(
+                                Icons.local_fire_department,
+                                size: scale.w(18),
+                                color: const Color(0xFF00714D),
+                              ),
                               SizedBox(width: scale.w(4)),
                               Text(
                                 'Chuỗi: 5 ngày',
@@ -108,7 +182,11 @@ class StudyTodayScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: scale.h(24)),
-                    _TodayProgressCard(scale: scale),
+                    _TodayProgressCard(
+                      scale: scale,
+                      completed: _controller.completedCount,
+                      total: _controller.cards.length,
+                    ),
                     SizedBox(height: scale.h(20)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -122,13 +200,16 @@ class StudyTodayScreen extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: scale.w(8), vertical: scale.h(4)),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: scale.w(8),
+                            vertical: scale.h(4),
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFFD8E2FF),
                             borderRadius: BorderRadius.circular(scale.r(999)),
                           ),
                           child: Text(
-                            '12 từ mới',
+                            '${_controller.cards.length} từ',
                             style: TextStyle(
                               fontSize: scale.sp(12),
                               fontWeight: FontWeight.w600,
@@ -139,31 +220,51 @@ class StudyTodayScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: scale.h(12)),
-                    const _TodayWordCard(
-                      word: 'consistency',
-                      level: 'B2',
-                      meaning: 'sự đều đặn',
-                      historyLabel: 'Lần 2/5',
-                      statusLabel: 'Ôn hôm nay',
-                      pillLabel: 'Reviewing',
-                      pillBackground: Color(0x336CF8BB),
-                      pillForeground: AppColors.secondary,
-                      statusIcon: Icons.event_repeat,
-                      statusColor: AppColors.primary,
-                    ),
-                    SizedBox(height: 12),
-                    const _TodayWordCard(
-                      word: 'persistent',
-                      level: 'C1',
-                      meaning: 'kiên trì, bền bỉ',
-                      historyLabel: 'Lần 1/5',
-                      statusLabel: 'Đang trễ',
-                      pillLabel: 'Learning',
-                      pillBackground: Color(0x33FFDAD6),
-                      pillForeground: Color(0xFFBA1A1A),
-                      statusIcon: Icons.priority_high,
-                      statusColor: AppColors.tertiary,
-                    ),
+                    if (_controller.isLoading)
+                      const Center(child: CircularProgressIndicator())
+                    else if (_controller.errorMessage != null)
+                      Center(
+                        child: FilledButton(
+                          onPressed: _controller.loadToday,
+                          child: const Text('Thử tải lại'),
+                        ),
+                      )
+                    else if (_controller.cards.isEmpty)
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 40),
+                        child: Center(
+                          child: Text('Bạn đã hoàn thành bài học hôm nay!'),
+                        ),
+                      )
+                    else
+                      ..._controller.cards.indexed.map(
+                        (entry) => Padding(
+                          padding: EdgeInsets.only(
+                            bottom: entry.$1 == _controller.cards.length - 1
+                                ? 0
+                                : 12,
+                          ),
+                          child: _TodayWordCard(
+                            word: entry.$2.english,
+                            level: 'L${entry.$2.reviewCount + 1}',
+                            meaning: entry.$2.vietnamese,
+                            historyLabel:
+                                'Lần ${entry.$2.reviewCount}/${reviewIntervals.length}',
+                            statusLabel: entry.$2.isOverdue
+                                ? 'Đang trễ'
+                                : 'Ôn hôm nay',
+                            pillLabel: 'Learning',
+                            pillBackground: const Color(0x336CF8BB),
+                            pillForeground: AppColors.secondary,
+                            statusIcon: entry.$2.isOverdue
+                                ? Icons.priority_high
+                                : Icons.event_repeat,
+                            statusColor: entry.$2.isOverdue
+                                ? AppColors.tertiary
+                                : AppColors.primary,
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -174,7 +275,10 @@ class StudyTodayScreen extends StatelessWidget {
             right: 0,
             bottom: scale.h(80),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: scale.w(20), vertical: scale.h(16)),
+              padding: EdgeInsets.symmetric(
+                horizontal: scale.w(20),
+                vertical: scale.h(16),
+              ),
               child: SafeArea(
                 top: false,
                 child: SizedBox(
@@ -187,11 +291,17 @@ class StudyTodayScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(scale.r(16)),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed:
+                        _controller.cards.isEmpty || _controller.isLoading
+                        ? null
+                        : _startStudy,
                     icon: Icon(Icons.play_circle_fill, size: scale.w(20)),
                     label: Text(
                       'Bắt đầu học',
-                      style: TextStyle(fontSize: scale.sp(20), fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: scale.sp(20),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -205,9 +315,15 @@ class StudyTodayScreen extends StatelessWidget {
 }
 
 class _TodayProgressCard extends StatelessWidget {
-  const _TodayProgressCard({required this.scale});
+  const _TodayProgressCard({
+    required this.scale,
+    required this.completed,
+    required this.total,
+  });
 
   final Scale scale;
+  final int completed;
+  final int total;
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +360,7 @@ class _TodayProgressCard extends StatelessWidget {
                   ),
                   SizedBox(height: scale.h(4)),
                   Text(
-                    '0/12 hoàn thành',
+                    '$completed/$total hoàn thành',
                     style: TextStyle(
                       fontSize: scale.sp(20),
                       fontWeight: FontWeight.w600,
@@ -254,7 +370,7 @@ class _TodayProgressCard extends StatelessWidget {
                 ],
               ),
               Text(
-                '0%',
+                '${total == 0 ? 0 : (completed / total * 100).round()}%',
                 style: TextStyle(
                   fontSize: scale.sp(14),
                   color: AppColors.textSoft,
@@ -265,11 +381,13 @@ class _TodayProgressCard extends StatelessWidget {
           SizedBox(height: scale.h(12)),
           ClipRRect(
             borderRadius: BorderRadius.circular(scale.r(999)),
-            child: const LinearProgressIndicator(
-              value: 0.08,
+            child: LinearProgressIndicator(
+              value: total == 0 ? 0 : completed / total,
               minHeight: 8,
-              backgroundColor: Color(0xFFECEEF0),
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+              backgroundColor: const Color(0xFFECEEF0),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppColors.primary,
+              ),
             ),
           ),
         ],
@@ -338,7 +456,10 @@ class _TodayWordCard extends StatelessWidget {
                     ),
                     SizedBox(width: scale.w(8)),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: scale.w(6), vertical: scale.h(2)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: scale.w(6),
+                        vertical: scale.h(2),
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFECEEF0),
                         borderRadius: BorderRadius.circular(scale.r(8)),
@@ -366,7 +487,11 @@ class _TodayWordCard extends StatelessWidget {
                 SizedBox(height: scale.h(10)),
                 Row(
                   children: [
-                    Icon(Icons.history, size: scale.w(14), color: AppColors.textMuted),
+                    Icon(
+                      Icons.history,
+                      size: scale.w(14),
+                      color: AppColors.textMuted,
+                    ),
                     SizedBox(width: scale.w(4)),
                     Text(
                       historyLabel,
@@ -395,11 +520,16 @@ class _TodayWordCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: scale.w(10), vertical: scale.h(6)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: scale.w(10),
+                  vertical: scale.h(6),
+                ),
                 decoration: BoxDecoration(
                   color: pillBackground,
                   borderRadius: BorderRadius.circular(scale.r(999)),
-                  border: Border.all(color: pillForeground.withValues(alpha: 0.2)),
+                  border: Border.all(
+                    color: pillForeground.withValues(alpha: 0.2),
+                  ),
                 ),
                 child: Text(
                   pillLabel,
@@ -411,7 +541,11 @@ class _TodayWordCard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: scale.h(8)),
-              Icon(Icons.chevron_right, color: AppColors.textMuted, size: scale.w(22)),
+              Icon(
+                Icons.chevron_right,
+                color: AppColors.textMuted,
+                size: scale.w(22),
+              ),
             ],
           ),
         ],
@@ -421,7 +555,9 @@ class _TodayWordCard extends StatelessWidget {
 }
 
 class FlashcardStudyScreen extends StatefulWidget {
-  const FlashcardStudyScreen({super.key});
+  const FlashcardStudyScreen({super.key, this.controller});
+
+  final StudySessionController? controller;
 
   @override
   State<FlashcardStudyScreen> createState() => _FlashcardStudyScreenState();
@@ -429,10 +565,90 @@ class FlashcardStudyScreen extends StatefulWidget {
 
 class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
   bool _flipped = false;
+  late final StudySessionController _controller;
+  late final bool _ownsController;
+
+  @override
+  void initState() {
+    super.initState();
+    _ownsController = widget.controller == null;
+    _controller =
+        widget.controller ??
+        StudySessionController(AppServices.instance.cardRepository);
+    _controller.addListener(_refresh);
+    if (_ownsController) {
+      _controller.loadToday();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_refresh);
+    if (_ownsController) {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _refresh() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> _answer(bool isCorrect) async {
+    await _controller.answerCurrent(isCorrect);
+    if (!mounted) {
+      return;
+    }
+    setState(() => _flipped = false);
+    if (_controller.isCompleted) {
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          title: const Text('Hoàn thành bài học'),
+          content: Text(
+            'Bạn nhớ ${_controller.correctAnswers}/${_controller.cards.length} từ.',
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Xong'),
+            ),
+          ],
+        ),
+      );
+      if (mounted) {
+        Navigator.of(context).pop(true);
+      }
+    } else if (_controller.errorMessage != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_controller.errorMessage!)));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final scale = context.scale;
+    final card = _controller.currentCard;
+    if (card == null) {
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () => Navigator.of(context).maybePop(),
+            icon: const Icon(Icons.close),
+          ),
+        ),
+        body: Center(
+          child: _controller.isLoading
+              ? const CircularProgressIndicator()
+              : const Text('Không có từ cần học hôm nay.'),
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -453,13 +669,18 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
           ),
           SafeArea(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(16), scale.w(20), scale.h(24)),
+              padding: EdgeInsets.fromLTRB(
+                scale.w(20),
+                scale.h(16),
+                scale.w(20),
+                scale.h(24),
+              ),
               child: Column(
                 children: [
                   Row(
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () => Navigator.of(context).maybePop(),
                         icon: const Icon(Icons.close),
                         color: AppColors.textSoft,
                       ),
@@ -480,20 +701,25 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(scale.r(999)),
+                                  borderRadius: BorderRadius.circular(
+                                    scale.r(999),
+                                  ),
                                   child: SizedBox(
                                     width: scale.w(128),
-                                    child: const LinearProgressIndicator(
-                                      value: 0.25,
+                                    child: LinearProgressIndicator(
+                                      value: _controller.progress,
                                       minHeight: 8,
-                                      backgroundColor: Color(0xFFECEEF0),
-                                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                                      backgroundColor: const Color(0xFFECEEF0),
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                            AppColors.primary,
+                                          ),
                                     ),
                                   ),
                                 ),
                                 SizedBox(width: scale.w(8)),
                                 Text(
-                                  '3/12',
+                                  '${_controller.completedCount + 1}/${_controller.cards.length}',
                                   style: TextStyle(
                                     fontSize: scale.sp(12),
                                     fontWeight: FontWeight.w600,
@@ -506,14 +732,21 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: scale.w(10), vertical: scale.h(8)),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: scale.w(10),
+                          vertical: scale.h(8),
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFF2F4F6),
                           borderRadius: BorderRadius.circular(scale.r(999)),
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.favorite, color: AppColors.danger, size: scale.w(18)),
+                            Icon(
+                              Icons.favorite,
+                              color: AppColors.danger,
+                              size: scale.w(18),
+                            ),
                             SizedBox(width: scale.w(4)),
                             Text(
                               '5',
@@ -531,17 +764,31 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        GestureDetector(
-                          onTap: () => setState(() => _flipped = !_flipped),
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 350),
-                            transitionBuilder: (child, animation) {
-                              final rotate = Tween(begin: 0.92, end: 1.0).animate(animation);
-                              return ScaleTransition(scale: rotate, child: child);
-                            },
-                            child: _flipped
-                                ? _FlashcardBack(key: const ValueKey('back'))
-                                : _FlashcardFront(key: const ValueKey('front')),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => _flipped = !_flipped),
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 350),
+                              transitionBuilder: (child, animation) {
+                                final rotate = Tween(
+                                  begin: 0.92,
+                                  end: 1.0,
+                                ).animate(animation);
+                                return ScaleTransition(
+                                  scale: rotate,
+                                  child: child,
+                                );
+                              },
+                              child: _flipped
+                                  ? _FlashcardBack(
+                                      key: ValueKey('back-${card.id}'),
+                                      card: card,
+                                    )
+                                  : _FlashcardFront(
+                                      key: ValueKey('front-${card.id}'),
+                                      card: card,
+                                    ),
+                            ),
                           ),
                         ),
                         SizedBox(height: scale.h(24)),
@@ -554,16 +801,28 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: AppColors.danger,
                                     backgroundColor: Colors.white,
-                                    side: const BorderSide(color: Color(0xFFBA1A1A)),
+                                    side: const BorderSide(
+                                      color: Color(0xFFBA1A1A),
+                                    ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(scale.r(16)),
+                                      borderRadius: BorderRadius.circular(
+                                        scale.r(16),
+                                      ),
                                     ),
                                   ),
-                                  onPressed: () {},
-                                  icon: Icon(Icons.sentiment_dissatisfied, size: scale.w(18)),
+                                  onPressed: _controller.isSubmitting
+                                      ? null
+                                      : () => _answer(false),
+                                  icon: Icon(
+                                    Icons.sentiment_dissatisfied,
+                                    size: scale.w(18),
+                                  ),
                                   label: Text(
                                     'Chưa nhớ',
-                                    style: TextStyle(fontSize: scale.sp(18), fontWeight: FontWeight.w600),
+                                    style: TextStyle(
+                                      fontSize: scale.sp(18),
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -577,14 +836,24 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
                                     backgroundColor: AppColors.secondary,
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(scale.r(16)),
+                                      borderRadius: BorderRadius.circular(
+                                        scale.r(16),
+                                      ),
                                     ),
                                   ),
-                                  onPressed: () {},
-                                  icon: Icon(Icons.check_circle, size: scale.w(18)),
+                                  onPressed: _controller.isSubmitting
+                                      ? null
+                                      : () => _answer(true),
+                                  icon: Icon(
+                                    Icons.check_circle,
+                                    size: scale.w(18),
+                                  ),
                                   label: Text(
                                     'Tôi nhớ',
-                                    style: TextStyle(fontSize: scale.sp(18), fontWeight: FontWeight.w600),
+                                    style: TextStyle(
+                                      fontSize: scale.sp(18),
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -620,7 +889,9 @@ class _FlashcardStudyScreenState extends State<FlashcardStudyScreen> {
 }
 
 class _FlashcardFront extends StatelessWidget {
-  const _FlashcardFront({super.key});
+  const _FlashcardFront({super.key, required this.card});
+
+  final StudyCardItem card;
 
   @override
   Widget build(BuildContext context) {
@@ -628,7 +899,10 @@ class _FlashcardFront extends StatelessWidget {
     return Container(
       key: key,
       width: double.infinity,
-      constraints: BoxConstraints(maxWidth: scale.w(400), minHeight: scale.h(500)),
+      constraints: BoxConstraints(
+        maxWidth: scale.w(400),
+        minHeight: scale.h(500),
+      ),
       padding: EdgeInsets.all(scale.w(24)),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -646,7 +920,7 @@ class _FlashcardFront extends StatelessWidget {
         children: [
           const Spacer(),
           Text(
-            'struggle with',
+            card.english,
             style: TextStyle(
               fontSize: scale.sp(32),
               fontWeight: FontWeight.w700,
@@ -662,13 +936,21 @@ class _FlashcardFront extends StatelessWidget {
               color: const Color(0xFF2170E4),
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.volume_up, color: Colors.white, size: scale.w(28)),
+            child: Icon(
+              Icons.volume_up,
+              color: Colors.white,
+              size: scale.w(28),
+            ),
           ),
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.touch_app, color: AppColors.textMuted, size: scale.w(18)),
+              Icon(
+                Icons.touch_app,
+                color: AppColors.textMuted,
+                size: scale.w(18),
+              ),
               SizedBox(width: scale.w(6)),
               Text(
                 'Nhấn để xem nghĩa',
@@ -686,7 +968,9 @@ class _FlashcardFront extends StatelessWidget {
 }
 
 class _FlashcardBack extends StatelessWidget {
-  const _FlashcardBack({super.key});
+  const _FlashcardBack({super.key, required this.card});
+
+  final StudyCardItem card;
 
   @override
   Widget build(BuildContext context) {
@@ -694,7 +978,10 @@ class _FlashcardBack extends StatelessWidget {
     return Container(
       key: key,
       width: double.infinity,
-      constraints: BoxConstraints(maxWidth: scale.w(400), minHeight: scale.h(500)),
+      constraints: BoxConstraints(
+        maxWidth: scale.w(400),
+        minHeight: scale.h(500),
+      ),
       padding: EdgeInsets.all(scale.w(24)),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -712,7 +999,7 @@ class _FlashcardBack extends StatelessWidget {
         children: [
           const Spacer(),
           Text(
-            'struggle with',
+            card.english,
             style: TextStyle(
               fontSize: scale.sp(20),
               color: AppColors.textSoft.withValues(alpha: 0.6),
@@ -726,26 +1013,13 @@ class _FlashcardBack extends StatelessWidget {
           ),
           SizedBox(height: scale.h(16)),
           Text(
-            'vật lộn với',
+            card.vietnamese,
             style: TextStyle(
               fontSize: scale.sp(32),
               fontWeight: FontWeight.w700,
               color: AppColors.secondary,
             ),
             textAlign: TextAlign.center,
-          ),
-          SizedBox(height: scale.h(16)),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: scale.w(16)),
-            child: Text(
-              '"She had to struggle with a difficult decision."',
-              style: TextStyle(
-                fontSize: scale.sp(16),
-                color: AppColors.textSoft,
-                fontStyle: FontStyle.italic,
-              ),
-              textAlign: TextAlign.center,
-            ),
           ),
           const Spacer(),
           Text(
@@ -762,10 +1036,7 @@ class _FlashcardBack extends StatelessWidget {
 }
 
 class _FlashcardSecondaryAction extends StatelessWidget {
-  const _FlashcardSecondaryAction({
-    required this.icon,
-    required this.label,
-  });
+  const _FlashcardSecondaryAction({required this.icon, required this.label});
 
   final IconData icon;
   final String label;
@@ -785,10 +1056,7 @@ class _FlashcardSecondaryAction extends StatelessWidget {
         SizedBox(height: scale.h(4)),
         Text(
           label,
-          style: TextStyle(
-            fontSize: scale.sp(12),
-            color: AppColors.textSoft,
-          ),
+          style: TextStyle(fontSize: scale.sp(12), color: AppColors.textSoft),
         ),
       ],
     );
@@ -844,7 +1112,12 @@ class MultipleChoiceQuizScreen extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(16), scale.w(20), scale.h(8)),
+                  padding: EdgeInsets.fromLTRB(
+                    scale.w(20),
+                    scale.h(16),
+                    scale.w(20),
+                    scale.h(8),
+                  ),
                   child: Row(
                     children: [
                       IconButton(
@@ -854,13 +1127,19 @@ class MultipleChoiceQuizScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: scale.w(12)),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: scale.w(12),
+                          ),
                           child: Column(
                             children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.timer, size: scale.w(18), color: AppColors.textSoft),
+                                  Icon(
+                                    Icons.timer,
+                                    size: scale.w(18),
+                                    color: AppColors.textSoft,
+                                  ),
                                   SizedBox(width: scale.w(4)),
                                   Text(
                                     '02:45',
@@ -874,14 +1153,18 @@ class MultipleChoiceQuizScreen extends StatelessWidget {
                               ),
                               SizedBox(height: scale.h(8)),
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(scale.r(999)),
+                                borderRadius: BorderRadius.circular(
+                                  scale.r(999),
+                                ),
                                 child: SizedBox(
                                   width: scale.w(200),
                                   child: const LinearProgressIndicator(
                                     value: 0.3333,
                                     minHeight: 8,
                                     backgroundColor: Color(0xFFE0E3E5),
-                                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6CF8BB)),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Color(0xFF6CF8BB),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -902,7 +1185,12 @@ class MultipleChoiceQuizScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListView(
-                    padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(12), scale.w(20), scale.h(180)),
+                    padding: EdgeInsets.fromLTRB(
+                      scale.w(20),
+                      scale.h(12),
+                      scale.w(20),
+                      scale.h(180),
+                    ),
                     children: [
                       Container(
                         width: double.infinity,
@@ -950,7 +1238,11 @@ class MultipleChoiceQuizScreen extends StatelessWidget {
                                     color: const Color(0xFFD8E2FF),
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(Icons.volume_up, color: const Color(0xFF004395), size: scale.w(20)),
+                                  child: Icon(
+                                    Icons.volume_up,
+                                    color: const Color(0xFF004395),
+                                    size: scale.w(20),
+                                  ),
                                 ),
                               ],
                             ),
@@ -968,10 +1260,7 @@ class MultipleChoiceQuizScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: scale.h(16)),
-                      const _QuizOptionCard(
-                        letter: 'A',
-                        text: 'chăm sóc',
-                      ),
+                      const _QuizOptionCard(letter: 'A', text: 'chăm sóc'),
                       SizedBox(height: 12),
                       const _QuizOptionCard(
                         letter: 'B',
@@ -985,10 +1274,7 @@ class MultipleChoiceQuizScreen extends StatelessWidget {
                         text: 'nhìn về phía trước',
                       ),
                       SizedBox(height: 12),
-                      const _QuizOptionCard(
-                        letter: 'D',
-                        text: 'từ bỏ',
-                      ),
+                      const _QuizOptionCard(letter: 'D', text: 'từ bỏ'),
                     ],
                   ),
                 ),
@@ -1002,14 +1288,17 @@ class MultipleChoiceQuizScreen extends StatelessWidget {
             child: Container(
               decoration: const BoxDecoration(
                 color: AppColors.background,
-                border: Border(
-                  top: BorderSide(color: Color(0xFFC2C6D6)),
-                ),
+                border: Border(top: BorderSide(color: Color(0xFFC2C6D6))),
               ),
               child: SafeArea(
                 top: false,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(16), scale.w(20), scale.h(16)),
+                  padding: EdgeInsets.fromLTRB(
+                    scale.w(20),
+                    scale.h(16),
+                    scale.w(20),
+                    scale.h(16),
+                  ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -1105,9 +1394,13 @@ class _QuizOptionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     final background = selected ? const Color(0x336CF8BB) : Colors.white;
-    final borderColor = selected ? AppColors.secondary : const Color(0xFFC2C6D6);
+    final borderColor = selected
+        ? AppColors.secondary
+        : const Color(0xFFC2C6D6);
     final borderWidth = selected ? 2.0 : 1.0;
-    final chipBackground = selected ? AppColors.secondary : const Color(0xFFE0E3E5);
+    final chipBackground = selected
+        ? AppColors.secondary
+        : const Color(0xFFE0E3E5);
     final chipForeground = selected ? Colors.white : AppColors.textSoft;
 
     return Container(
@@ -1175,7 +1468,12 @@ class TypingQuizScreen extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(12), scale.w(20), scale.h(12)),
+                  padding: EdgeInsets.fromLTRB(
+                    scale.w(20),
+                    scale.h(12),
+                    scale.w(20),
+                    scale.h(12),
+                  ),
                   decoration: const BoxDecoration(
                     color: AppColors.background,
                     border: Border(
@@ -1237,7 +1535,9 @@ class TypingQuizScreen extends StatelessWidget {
                                 value: 0.58,
                                 minHeight: 6,
                                 backgroundColor: Color(0xFFECEEF0),
-                                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.primary,
+                                ),
                               ),
                             ),
                           ),
@@ -1248,7 +1548,12 @@ class TypingQuizScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: ListView(
-                    padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(24), scale.w(20), scale.h(120)),
+                    padding: EdgeInsets.fromLTRB(
+                      scale.w(20),
+                      scale.h(24),
+                      scale.w(20),
+                      scale.h(120),
+                    ),
                     children: [
                       Container(
                         padding: EdgeInsets.all(scale.w(24)),
@@ -1269,7 +1574,11 @@ class TypingQuizScreen extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.translate, size: scale.w(20), color: AppColors.primary),
+                                Icon(
+                                  Icons.translate,
+                                  size: scale.w(20),
+                                  color: AppColors.primary,
+                                ),
                                 SizedBox(width: scale.w(8)),
                                 Text(
                                   'NHẬP TỪ/CỤM TỪ TIẾNG ANH',
@@ -1323,13 +1632,17 @@ class TypingQuizScreen extends StatelessWidget {
                               height: scale.h(128),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF2F4F6),
-                                borderRadius: BorderRadius.circular(scale.r(12)),
+                                borderRadius: BorderRadius.circular(
+                                  scale.r(12),
+                                ),
                               ),
                               child: Center(
                                 child: Icon(
                                   Icons.keyboard,
                                   size: scale.w(64),
-                                  color: AppColors.primary.withValues(alpha: 0.2),
+                                  color: AppColors.primary.withValues(
+                                    alpha: 0.2,
+                                  ),
                                 ),
                               ),
                             ),
@@ -1356,7 +1669,10 @@ class TypingQuizScreen extends StatelessWidget {
                               horizontal: scale.w(16),
                               vertical: scale.h(16),
                             ),
-                            suffixIcon: Icon(Icons.edit_note, color: AppColors.textSoft.withValues(alpha: 0.5)),
+                            suffixIcon: Icon(
+                              Icons.edit_note,
+                              color: AppColors.textSoft.withValues(alpha: 0.5),
+                            ),
                           ),
                           style: TextStyle(
                             fontSize: scale.sp(18),
@@ -1429,7 +1745,10 @@ class TypingQuizScreen extends StatelessWidget {
             child: SafeArea(
               top: false,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: scale.w(16), vertical: scale.h(12)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: scale.w(16),
+                  vertical: scale.h(12),
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF2D3133),
                   borderRadius: BorderRadius.circular(scale.r(12)),
@@ -1489,7 +1808,10 @@ class _TypingActionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final scale = context.scale;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: scale.w(8), vertical: scale.h(16)),
+      padding: EdgeInsets.symmetric(
+        horizontal: scale.w(8),
+        vertical: scale.h(16),
+      ),
       decoration: BoxDecoration(
         color: const Color(0xFFF2F4F6),
         borderRadius: BorderRadius.circular(scale.r(16)),
@@ -1562,7 +1884,12 @@ class StudyResultScreen extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(12), scale.w(20), scale.h(12)),
+                  padding: EdgeInsets.fromLTRB(
+                    scale.w(20),
+                    scale.h(12),
+                    scale.w(20),
+                    scale.h(12),
+                  ),
                   decoration: const BoxDecoration(
                     color: AppColors.background,
                     border: Border(
@@ -1583,14 +1910,23 @@ class StudyResultScreen extends StatelessWidget {
                       CircleAvatar(
                         radius: scale.w(20),
                         backgroundColor: const Color(0xFFD8E2FF),
-                        child: Icon(Icons.person, color: AppColors.onPrimaryFixed, size: scale.w(20)),
+                        child: Icon(
+                          Icons.person,
+                          color: AppColors.onPrimaryFixed,
+                          size: scale.w(20),
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Expanded(
                   child: ListView(
-                    padding: EdgeInsets.fromLTRB(scale.w(20), scale.h(24), scale.w(20), scale.h(24)),
+                    padding: EdgeInsets.fromLTRB(
+                      scale.w(20),
+                      scale.h(24),
+                      scale.w(20),
+                      scale.h(24),
+                    ),
                     children: [
                       Column(
                         children: [
@@ -1688,7 +2024,9 @@ class StudyResultScreen extends StatelessWidget {
                                 value: 1,
                                 minHeight: 16,
                                 backgroundColor: Color(0xFFE6E8EA),
-                                valueColor: AlwaysStoppedAnimation<Color>(AppColors.secondary),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.secondary,
+                                ),
                               ),
                             ),
                           ],
@@ -1718,7 +2056,8 @@ class StudyResultScreen extends StatelessWidget {
                                     'Tổng số từ',
                                     style: TextStyle(
                                       fontSize: scale.sp(14),
-                                      color: AppColors.onPrimaryContainer.withValues(alpha: 0.8),
+                                      color: AppColors.onPrimaryContainer
+                                          .withValues(alpha: 0.8),
                                     ),
                                   ),
                                   SizedBox(height: scale.h(4)),
@@ -1736,7 +2075,9 @@ class StudyResultScreen extends StatelessWidget {
                             Icon(
                               Icons.auto_stories,
                               size: scale.w(40),
-                              color: AppColors.onPrimaryContainer.withValues(alpha: 0.2),
+                              color: AppColors.onPrimaryContainer.withValues(
+                                alpha: 0.2,
+                              ),
                             ),
                           ],
                         ),
@@ -1920,14 +2261,9 @@ class _StudyResultActionButton extends StatelessWidget {
         icon: Icon(icon, size: scale.w(20)),
         label: Text(
           label,
-          style: TextStyle(
-            fontSize: scale.sp(20),
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: scale.sp(20), fontWeight: FontWeight.w600),
         ),
       ),
     );
   }
 }
-
-
