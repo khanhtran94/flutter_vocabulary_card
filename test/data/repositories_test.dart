@@ -86,4 +86,37 @@ void main() {
     expect(await cardRepository.getCardsByDeckId(deckId), isEmpty);
     expect(await reviewRepository.getLogsByCardId(cardId), isEmpty);
   });
+
+  test('creates many cards in one transaction', () async {
+    final cards = List.generate(
+      50,
+      (index) => NewCardRecord(
+        english: 'word $index',
+        vietnamese: 'nghĩa $index',
+      ),
+    );
+
+    final deckId = await deckRepository.createDeckWithCards(
+      name: 'Bulk deck',
+      cards: cards,
+    );
+
+    expect(await cardRepository.getCardsByDeckId(deckId), hasLength(50));
+  });
+
+  test('rolls back deck when bulk card insert fails', () async {
+    await expectLater(
+      deckRepository.createDeckWithCards(
+        name: 'Invalid deck',
+        cards: const [
+          NewCardRecord(english: 'duplicate', vietnamese: 'một'),
+          NewCardRecord(english: 'duplicate', vietnamese: 'hai'),
+        ],
+      ),
+      throwsA(anything),
+    );
+
+    expect(await deckRepository.getAllDecks(), isEmpty);
+    expect(await cardRepository.getAllCards(), isEmpty);
+  });
 }

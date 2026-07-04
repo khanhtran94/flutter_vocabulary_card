@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../data/repositories/card_repository.dart';
 import '../../../data/repositories/deck_repository.dart';
 
 class NewFlashcard {
@@ -18,12 +17,9 @@ class NewFlashcard {
 class CreateFlashcardsController extends ChangeNotifier {
   CreateFlashcardsController({
     required DeckRepository deckRepository,
-    required CardRepository cardRepository,
-  }) : _deckRepository = deckRepository,
-       _cardRepository = cardRepository;
+  }) : _deckRepository = deckRepository;
 
   final DeckRepository _deckRepository;
-  final CardRepository _cardRepository;
 
   bool isSaving = false;
   String? errorMessage;
@@ -49,25 +45,21 @@ class CreateFlashcardsController extends ChangeNotifier {
     isSaving = true;
     errorMessage = null;
     notifyListeners();
-    int? deckId;
     try {
-      deckId = await _deckRepository.createDeck(
+      return await _deckRepository.createDeckWithCards(
         name: deckName,
         description: description,
+        cards: validCards
+            .map(
+              (card) => NewCardRecord(
+                english: card.english,
+                vietnamese: card.vietnamese,
+                audioPath: card.audioPath,
+              ),
+            )
+            .toList(),
       );
-      for (final card in validCards) {
-        await _cardRepository.createCard(
-          deckId: deckId,
-          english: card.english,
-          vietnamese: card.vietnamese,
-          audioPath: card.audioPath,
-        );
-      }
-      return deckId;
     } catch (_) {
-      if (deckId != null) {
-        await _deckRepository.deleteDeck(deckId);
-      }
       errorMessage = 'Không thể lưu bộ thẻ. Vui lòng thử lại.';
       return null;
     } finally {

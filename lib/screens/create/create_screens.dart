@@ -22,7 +22,6 @@ class _CreateDeckScreenState extends State<CreateDeckScreen> {
     final services = AppServices.instance;
     _controller = CreateFlashcardsController(
       deckRepository: services.deckRepository,
-      cardRepository: services.cardRepository,
     )..addListener(_refresh);
   }
 
@@ -608,6 +607,58 @@ class _ExampleCheckboxField extends StatelessWidget {
   }
 }
 
+class _DeckNameDialog extends StatefulWidget {
+  const _DeckNameDialog({required this.initialName});
+
+  final String initialName;
+
+  @override
+  State<_DeckNameDialog> createState() => _DeckNameDialogState();
+}
+
+class _DeckNameDialogState extends State<_DeckNameDialog> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialName);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Tên bộ flashcard'),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        decoration: const InputDecoration(
+          labelText: 'Tên bộ thẻ',
+          border: OutlineInputBorder(),
+        ),
+        onSubmitted: (_) => _submit(),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Hủy'),
+        ),
+        FilledButton(onPressed: _submit, child: const Text('Lưu')),
+      ],
+    );
+  }
+
+  void _submit() {
+    Navigator.pop(context, _controller.text.trim());
+  }
+}
+
 class ExtractedPreviewScreen extends StatefulWidget {
   const ExtractedPreviewScreen({
     super.key,
@@ -641,7 +692,6 @@ class _ExtractedPreviewScreenState extends State<ExtractedPreviewScreen> {
     final services = AppServices.instance;
     _createController = CreateFlashcardsController(
       deckRepository: services.deckRepository,
-      cardRepository: services.cardRepository,
     )..addListener(_refresh);
   }
 
@@ -667,34 +717,12 @@ class _ExtractedPreviewScreenState extends State<ExtractedPreviewScreen> {
       return;
     }
     final now = DateTime.now();
-    final nameController = TextEditingController(
-      text: 'Từ vựng ${now.day}/${now.month}/${now.year}',
-    );
     final deckName = await showDialog<String>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Tên bộ flashcard'),
-        content: TextField(
-          controller: nameController,
-          autofocus: true,
-          decoration: const InputDecoration(
-            labelText: 'Tên bộ thẻ',
-            border: OutlineInputBorder(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, nameController.text.trim()),
-            child: const Text('Lưu'),
-          ),
-        ],
+      builder: (context) => _DeckNameDialog(
+        initialName: 'Từ vựng ${now.day}/${now.month}/${now.year}',
       ),
     );
-    nameController.dispose();
     if (deckName == null || deckName.isEmpty || !mounted) {
       return;
     }
