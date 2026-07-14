@@ -56,7 +56,7 @@ class _StudyTodayScreenState extends State<StudyTodayScreen> {
     final scale = context.scale;
     return Scaffold(
       backgroundColor: AppColors.background,
-      bottomNavigationBar: const _BottomNav(selectedIndex: 0),
+      bottomNavigationBar: const _BottomNav(selectedIndex: 1),
       body: Stack(
         children: [
           Column(
