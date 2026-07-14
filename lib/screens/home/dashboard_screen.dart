@@ -3,6 +3,10 @@ part of '../../app/vocabulary_app.dart';
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
+  void _open(BuildContext context, Widget screen) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+  }
+
   @override
   Widget build(BuildContext context) {
     final scale = context.scale;
@@ -38,10 +42,18 @@ class DashboardScreen extends StatelessWidget {
         actions: [
           Padding(
             padding: EdgeInsets.only(right: scale.w(16)),
-            child: CircleAvatar(
-              radius: scale.w(20),
-              backgroundColor: AppColors.surface,
-              child: Icon(Icons.person, color: AppColors.textSoft, size: scale.w(20)),
+            child: InkWell(
+              onTap: () => _open(context, const SettingsScreen()),
+              customBorder: const CircleBorder(),
+              child: CircleAvatar(
+                radius: scale.w(20),
+                backgroundColor: AppColors.surface,
+                child: Icon(
+                  Icons.person,
+                  color: AppColors.textSoft,
+                  size: scale.w(20),
+                ),
+              ),
             ),
           ),
         ],
@@ -91,7 +103,7 @@ class DashboardScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(scale.r(16)),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () => _open(context, const StudyTodayScreen()),
                 icon: Icon(Icons.play_circle_fill, size: scale.w(24)),
                 label: Text(
                   'Bắt đầu học hôm nay',
@@ -107,7 +119,7 @@ class DashboardScreen extends StatelessWidget {
               crossAxisSpacing: scale.w(12),
               mainAxisSpacing: scale.h(12),
               childAspectRatio: 1,
-              children: const [
+              children: [
                 _DashboardStatCard(
                   label: 'Cần ôn',
                   value: '12',
@@ -115,6 +127,7 @@ class DashboardScreen extends StatelessWidget {
                   icon: Icons.schedule,
                   iconBackground: Color(0xFFFFDAD6),
                   iconColor: Color(0xFF93000A),
+                  onTap: () => _open(context, const ReviewCalendarScreen()),
                 ),
                 _DashboardStatCard(
                   label: 'Đang học',
@@ -123,6 +136,7 @@ class DashboardScreen extends StatelessWidget {
                   icon: Icons.auto_stories,
                   iconBackground: Color(0xFFD8E2FF),
                   iconColor: Color(0xFF004395),
+                  onTap: () => _open(context, const VocabularyLibraryScreen()),
                 ),
                 _DashboardStatCard(
                   label: 'Đã ghi nhớ',
@@ -131,6 +145,7 @@ class DashboardScreen extends StatelessWidget {
                   icon: Icons.task_alt,
                   iconBackground: Color(0xFF6CF8BB),
                   iconColor: Color(0xFF00714D),
+                  onTap: () => _open(context, const VocabularyLibraryScreen()),
                 ),
                 _DashboardStatCard(
                   label: 'Streak',
@@ -139,6 +154,7 @@ class DashboardScreen extends StatelessWidget {
                   icon: Icons.local_fire_department,
                   iconBackground: Color(0xFFFFDAD9),
                   iconColor: Color(0xFF723335),
+                  onTap: () => _open(context, const StatisticsScreen()),
                 ),
               ],
             ),
@@ -154,18 +170,21 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: scale.h(12)),
-            const _QuickActionButton(
+            _QuickActionButton(
               icon: Icons.add_box_outlined,
+              onPressed: () => _open(context, const PasteTextScreen()),
               title: 'Nhập đoạn tiếng Anh mới',
             ),
             SizedBox(height: 12),
-            const _QuickActionButton(
+            _QuickActionButton(
               icon: Icons.folder_open_outlined,
+              onPressed: () => _open(context, const VocabularyLibraryScreen()),
               title: 'Xem kho từ vựng',
             ),
             SizedBox(height: 12),
-            const _QuickActionButton(
+            _QuickActionButton(
               icon: Icons.calendar_month_outlined,
+              onPressed: () => _open(context, const ReviewCalendarScreen()),
               title: 'Lịch ôn tập',
             ),
           ],
@@ -183,6 +202,7 @@ class _DashboardStatCard extends StatelessWidget {
     required this.icon,
     required this.iconBackground,
     required this.iconColor,
+    required this.onTap,
   });
 
   final String label;
@@ -191,53 +211,61 @@ class _DashboardStatCard extends StatelessWidget {
   final IconData icon;
   final Color iconBackground;
   final Color iconColor;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final scale = context.scale;
-    return Container(
-      padding: EdgeInsets.all(scale.w(16)),
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(scale.r(16)),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(scale.r(16)),
-        border: Border.all(color: const Color(0xFFC2C6D6)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            width: scale.w(40),
-            height: scale.w(40),
-            decoration: BoxDecoration(
-              color: iconBackground,
-              borderRadius: BorderRadius.circular(scale.r(12)),
-            ),
-            child: Icon(icon, color: iconColor, size: scale.w(22)),
+        child: Container(
+          padding: EdgeInsets.all(scale.w(16)),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(scale.r(16)),
+            border: Border.all(color: const Color(0xFFC2C6D6)),
           ),
-          Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: scale.sp(12),
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textSoft,
+              Container(
+                width: scale.w(40),
+                height: scale.w(40),
+                decoration: BoxDecoration(
+                  color: iconBackground,
+                  borderRadius: BorderRadius.circular(scale.r(12)),
                 ),
+                child: Icon(icon, color: iconColor, size: scale.w(22)),
               ),
-              SizedBox(height: scale.h(4)),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: scale.sp(24),
-                  fontWeight: FontWeight.w700,
-                  color: valueColor,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: scale.sp(12),
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textSoft,
+                    ),
+                  ),
+                  SizedBox(height: scale.h(4)),
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: scale.sp(24),
+                      fontWeight: FontWeight.w700,
+                      color: valueColor,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -337,10 +365,12 @@ class _QuickActionButton extends StatelessWidget {
   const _QuickActionButton({
     required this.icon,
     required this.title,
+    required this.onPressed,
   });
 
   final IconData icon;
   final String title;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -358,7 +388,7 @@ class _QuickActionButton extends StatelessWidget {
           ),
           padding: EdgeInsets.symmetric(horizontal: scale.w(16)),
         ),
-        onPressed: () {},
+        onPressed: onPressed,
         child: Row(
           children: [
             Icon(icon, color: AppColors.primary, size: scale.w(24)),
